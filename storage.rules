@@ -1,0 +1,23 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // TODO: replace with the real UID after creating the admin user in
+    // Firebase Console (Authentication -> Users).
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == "2f6bylS8DrWniWMBOVtQMpplL0C2";
+    }
+
+    // Public media: profile photo, service/portfolio/book/article images.
+    match /{folder}/{allPaths=**} {
+      allow read: if folder in ['profile', 'services', 'portfolio', 'books', 'articles'];
+      allow write: if isAdmin();
+    }
+
+    // Social workspace media is never public.
+    match /social/{allPaths=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

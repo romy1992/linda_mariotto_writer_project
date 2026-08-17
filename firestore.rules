@@ -1,0 +1,61 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // TODO: replace with the real UID after creating the admin user in
+    // Firebase Console (Authentication -> Users). This is the only gate
+    // that matters: it is evaluated server-side and cannot be bypassed
+    // from the client, unlike any check written in React.
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == "2f6bylS8DrWniWMBOVtQMpplL0C2";
+    }
+
+    match /settings/site {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /services/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /portfolio/{id} {
+      allow read: if (resource.data.status == 'published'
+                        && resource.data.visibility == 'public')
+                      || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /books/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /articles/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /categories/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Never public: this is the ghostwriter's private content workspace.
+    match /socialPosts/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    // Anyone can submit a contact request, nobody but the admin can read
+    // or manage them afterwards.
+    match /contacts/{id} {
+      allow create: if request.resource.data.keys().hasAll(
+                        ['firstName', 'lastName', 'email', 'message', 'privacyAccepted']
+                      )
+                      && request.resource.data.privacyAccepted == true;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
