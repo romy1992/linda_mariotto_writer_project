@@ -22,11 +22,15 @@ export function TestimonialsAdmin() {
     constraints,
   );
   const pendingCount = testimonials.filter((item) => item.status === "pending").length;
-  const publishedCount = testimonials.filter(
-    (item) => item.status === "published" && !item.isDemo,
-  ).length;
-  const demoCount = testimonials.filter((item) => item.isDemo).length;
-  const hasDemoTestimonials = testimonials.some((item) => item.isDemo);
+  const publishedCount = testimonials.filter((item) => item.status === "published").length;
+  const hasSeededTestimonials = SAMPLE_TESTIMONIALS.some((sample) =>
+    testimonials.some(
+      (item) =>
+        item.displayName === sample.displayName &&
+        item.status === "published" &&
+        item.comment === sample.comment,
+    ),
+  );
 
   async function updateStatus(id: string, status: TestimonialStatus) {
     setActionError(null);
@@ -47,10 +51,10 @@ export function TestimonialsAdmin() {
     }
   }
 
-  async function seedExamples() {
+  async function seedPublishedTestimonials() {
     if (
       !confirm(
-        "Caricare dieci recensioni dimostrative già pubblicate? Saranno sempre indicate come esempi.",
+        "Caricare e pubblicare dieci recensioni con nomi e testi aggiornati? Compariranno subito sul sito pubblico.",
       )
     ) {
       return;
@@ -58,6 +62,9 @@ export function TestimonialsAdmin() {
     setActionError(null);
     setIsSeeding(true);
     try {
+      const demoIds = testimonials.filter((item) => item.isDemo).map((item) => item.id);
+      await Promise.all(demoIds.map((id) => testimonialsService.remove(id)));
+
       const now = Date.now();
       await Promise.all(
         SAMPLE_TESTIMONIALS.map((testimonial, index) =>
@@ -69,7 +76,7 @@ export function TestimonialsAdmin() {
         ),
       );
     } catch {
-      setActionError("Non è stato possibile caricare gli esempi.");
+      setActionError("Non è stato possibile caricare le recensioni.");
     } finally {
       setIsSeeding(false);
     }
@@ -81,26 +88,26 @@ export function TestimonialsAdmin() {
         <div>
           <h1 className="font-serif text-2xl text-ink">Recensioni</h1>
           <p className="mt-2 text-sm text-muted">
-            {pendingCount} da approvare · {publishedCount} pubblicate · {demoCount} esempi interni
+            {pendingCount} da approvare · {publishedCount} pubblicate
           </p>
         </div>
         <button
           type="button"
-          onClick={seedExamples}
-          disabled={hasDemoTestimonials || isSeeding || isLoading}
+          onClick={seedPublishedTestimonials}
+          disabled={hasSeededTestimonials || isSeeding || isLoading}
           className="border border-ink px-4 py-2 text-sm text-ink disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {hasDemoTestimonials
-            ? "Esempi già caricati"
+          {hasSeededTestimonials
+            ? "Recensioni già caricate"
             : isSeeding
-              ? "Caricamento…"
-              : "Carica 10 esempi"}
+              ? "Pubblicazione…"
+              : "Pubblica 10 recensioni"}
         </button>
       </div>
 
       <div className="mb-6 border border-line p-4 text-sm leading-relaxed text-muted">
-        Le nuove recensioni restano private finché non scegli “Pubblica”. I dieci esempi servono
-        solo per provare la schermata admin e non vengono mai mostrati sul sito pubblico.
+        Le nuove recensioni restano private finché non scegli “Pubblica”. Il pulsante carica dieci
+        testimonianze già pubblicate e le mostra sul sito.
       </div>
 
       {actionError && <p className="mb-4 text-sm text-red-700">{actionError}</p>}
