@@ -43,7 +43,7 @@ export function Services() {
                   </p>
                 </div>
                 <span className="text-sm text-muted transition-colors group-hover:text-ink md:self-center">
-                  Approfondisci →
+                  Scopri il servizio →
                 </span>
               </Link>
             </li>

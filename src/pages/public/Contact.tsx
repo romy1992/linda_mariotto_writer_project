@@ -65,11 +65,12 @@ export function Contact() {
       <Seo title="Contatti — Linda Mariotto" description="Raccontami il tuo progetto." />
       <section className="mx-auto grid max-w-6xl gap-14 px-6 py-20 md:grid-cols-[0.9fr_1.1fr] md:gap-20 md:py-28">
         <div>
-          <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Progetto</p>
-          <h1 className="font-serif text-4xl text-ink md:text-5xl">Contatti</h1>
+          <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Contatti</p>
+          <h1 className="text-balance font-serif text-4xl leading-[1.12] text-ink md:text-5xl">
+            Raccontami il tuo progetto.
+          </h1>
           <p className="mt-5 max-w-md leading-relaxed text-muted">
-            Raccontami il tuo progetto: ti risponderò per capire insieme la direzione più adatta
-            alla tua storia.
+            Non serve avere già tutto chiaro. Raccontami da dove vorresti partire.
           </p>
           {(settings?.email || settings?.instagramUrl || settings?.linkedinUrl) && (
             <ul className="mt-10 space-y-3 text-sm text-muted">

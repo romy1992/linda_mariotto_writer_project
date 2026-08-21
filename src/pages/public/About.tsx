@@ -16,20 +16,25 @@ export function About() {
       <section className="border-b border-line">
         <div className="mx-auto grid max-w-6xl items-start gap-12 px-6 py-20 md:grid-cols-[0.9fr_1.1fr] md:gap-16 md:py-28">
           <div>
-            <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Profilo</p>
-            <h1 className="font-serif text-4xl text-ink md:text-5xl">Chi sono</h1>
-            {settings?.photoURL && (
+            {settings?.photoURL ? (
               <img
                 src={settings.photoURL}
                 alt={professionalName}
-                className="mt-10 aspect-[3/4] w-full max-w-md object-cover"
+                className="aspect-[3/4] w-full max-w-md object-cover"
               />
+            ) : (
+              <div className="aspect-[3/4] w-full max-w-md bg-paper-deep" aria-hidden="true" />
             )}
           </div>
 
-          <div className="md:pt-12">
+          <div className="md:pt-4">
+            <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Chi sono</p>
+            <h1 className="text-balance font-serif text-4xl leading-[1.12] text-ink md:text-5xl">
+              <span className="block">Dietro ogni testo</span>
+              <span className="block">c’è prima di tutto ascolto.</span>
+            </h1>
             {settings?.bio && (
-              <p className="text-lg leading-[1.8] text-ink md:text-xl">{settings.bio}</p>
+              <p className="mt-10 text-lg leading-[1.8] text-ink md:text-xl">{settings.bio}</p>
             )}
 
             {(settings?.instagramUrl || settings?.linkedinUrl) && (
@@ -62,20 +67,22 @@ export function About() {
 
       {(settings?.philosophy || settings?.method) && (
         <section>
-          <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-2 md:gap-16 md:py-28">
+          <div className="mx-auto max-w-3xl px-6 py-20 md:py-28">
             {settings.philosophy && (
-              <div className="border-t border-line pt-10">
-                <p className="text-xs uppercase tracking-[0.22em] text-accent">01</p>
-                <h2 className="mt-3 font-serif text-3xl text-ink">Filosofia di scrittura</h2>
-                <p className="mt-6 leading-[1.8] text-muted">{settings.philosophy}</p>
-              </div>
+              <article className="border-t border-line pt-12">
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">Capitolo 01</p>
+                <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">
+                  Filosofia di scrittura
+                </h2>
+                <p className="mt-8 text-lg leading-[1.85] text-muted">{settings.philosophy}</p>
+              </article>
             )}
             {settings.method && (
-              <div className="border-t border-line pt-10">
-                <p className="text-xs uppercase tracking-[0.22em] text-accent">02</p>
-                <h2 className="mt-3 font-serif text-3xl text-ink">Metodo di lavoro</h2>
-                <p className="mt-6 leading-[1.8] text-muted">{settings.method}</p>
-              </div>
+              <article className="mt-16 border-t border-line pt-12 md:mt-20">
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">Capitolo 02</p>
+                <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">Metodo di lavoro</h2>
+                <p className="mt-8 text-lg leading-[1.85] text-muted">{settings.method}</p>
+              </article>
             )}
           </div>
         </section>

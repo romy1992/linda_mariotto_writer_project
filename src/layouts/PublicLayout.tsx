@@ -14,7 +14,9 @@ const NAV_LINKS = [
 
 function navClass({ isActive }: { isActive: boolean }) {
   return `relative text-[13px] tracking-wide transition-colors hover:text-ink ${
-    isActive ? "text-ink after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:bg-accent" : "text-muted"
+    isActive
+      ? "text-ink after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:bg-accent"
+      : "text-muted"
   }`;
 }
 
@@ -33,13 +35,18 @@ export function PublicLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-paper">
       <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-5">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4 md:py-5">
           <NavLink
             to="/"
-            className="font-serif text-lg tracking-tight text-ink md:text-xl"
+            className="group min-w-0"
             onClick={() => setIsMenuOpen(false)}
           >
-            {brandName}
+            <span className="block font-serif text-lg tracking-tight text-ink md:text-xl">
+              {brandName}
+            </span>
+            <span className="mt-0.5 block text-[10px] uppercase tracking-[0.18em] text-muted">
+              Autrice &amp; Ghostwriter
+            </span>
           </NavLink>
 
           <nav className="hidden items-center gap-7 lg:flex" aria-label="Navigazione principale">
@@ -50,7 +57,7 @@ export function PublicLayout() {
             ))}
             <NavLink
               to="/contatti"
-              className="ml-2 border border-ink px-4 py-2 text-[13px] tracking-wide text-ink transition-colors hover:bg-ink hover:text-paper"
+              className="ml-2 bg-ink px-4 py-2.5 text-[13px] tracking-wide text-paper transition-opacity hover:opacity-90"
             >
               Raccontami il tuo progetto
             </NavLink>
@@ -90,7 +97,7 @@ export function PublicLayout() {
             <NavLink
               to="/contatti"
               onClick={() => setIsMenuOpen(false)}
-              className="mt-4 inline-flex border border-ink px-4 py-3 text-sm text-ink transition-colors hover:bg-ink hover:text-paper"
+              className="mt-4 inline-flex bg-ink px-4 py-3 text-sm text-paper transition-opacity hover:opacity-90"
             >
               Raccontami il tuo progetto
             </NavLink>
@@ -103,11 +110,14 @@ export function PublicLayout() {
       </main>
 
       <footer className="border-t border-line bg-paper-deep/40">
-        <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-14 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
-            <p className="font-serif text-2xl text-ink">{brandName}</p>
+            <p className="font-serif text-2xl uppercase tracking-wide text-ink">{brandName}</p>
+            <p className="mt-2 text-xs uppercase tracking-[0.18em] text-muted">
+              Autrice &amp; Ghostwriter
+            </p>
             {settings?.payoff && (
-              <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">{settings.payoff}</p>
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">{settings.payoff}</p>
             )}
           </div>
 
@@ -124,6 +134,38 @@ export function PublicLayout() {
             </ul>
           </div>
 
+          {(settings?.instagramUrl || settings?.linkedinUrl) && (
+            <div>
+              <p className="mb-4 text-xs uppercase tracking-[0.18em] text-accent">Social</p>
+              <ul className="space-y-2 text-sm text-muted">
+                {settings.instagramUrl && (
+                  <li>
+                    <a
+                      href={settings.instagramUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="transition-colors hover:text-ink"
+                    >
+                      Instagram
+                    </a>
+                  </li>
+                )}
+                {settings.linkedinUrl && (
+                  <li>
+                    <a
+                      href={settings.linkedinUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="transition-colors hover:text-ink"
+                    >
+                      LinkedIn
+                    </a>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
+
           <div>
             <p className="mb-4 text-xs uppercase tracking-[0.18em] text-accent">Contatti</p>
             <ul className="space-y-2 text-sm text-muted">
@@ -134,30 +176,11 @@ export function PublicLayout() {
                   </a>
                 </li>
               )}
-              {settings?.instagramUrl && (
-                <li>
-                  <a
-                    href={settings.instagramUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="transition-colors hover:text-ink"
-                  >
-                    Instagram
-                  </a>
-                </li>
-              )}
-              {settings?.linkedinUrl && (
-                <li>
-                  <a
-                    href={settings.linkedinUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="transition-colors hover:text-ink"
-                  >
-                    LinkedIn
-                  </a>
-                </li>
-              )}
+              <li>
+                <NavLink to="/contatti" className="transition-colors hover:text-ink">
+                  Raccontami il tuo progetto
+                </NavLink>
+              </li>
               <li>
                 <NavLink to="/privacy" className="transition-colors hover:text-ink">
                   Privacy
@@ -170,10 +193,10 @@ export function PublicLayout() {
         <div className="border-t border-line">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-6 text-xs text-muted">
             <span>
-              © {year} {brandName} — Ghostwriter
+              © {year} {brandName}
             </span>
-            <NavLink to="/contatti" className="tracking-wide transition-colors hover:text-ink">
-              Raccontami il tuo progetto
+            <NavLink to="/privacy" className="tracking-wide transition-colors hover:text-ink">
+              Privacy
             </NavLink>
           </div>
         </div>

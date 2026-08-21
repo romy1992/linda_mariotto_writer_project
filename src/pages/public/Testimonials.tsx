@@ -91,17 +91,22 @@ export function Testimonials() {
             </p>
           </div>
 
-          <div className="mt-16 space-y-14 md:mt-20 md:space-y-20">
-            {testimonials.map((testimonial) => (
-              <article key={testimonial.id} className="border-l border-accent pl-6 md:pl-10">
+          <div className="mt-16 space-y-16 md:mt-24 md:space-y-24">
+            {testimonials.map((testimonial, index) => (
+              <article
+                key={testimonial.id}
+                className={`border-t border-line pt-10 md:pt-14 ${
+                  index % 2 === 1 ? "md:ml-auto md:max-w-2xl" : "md:max-w-3xl"
+                }`}
+              >
                 <blockquote>
-                  <p className="whitespace-pre-wrap font-serif text-2xl leading-snug text-ink md:text-3xl md:leading-snug">
+                  <p className="whitespace-pre-wrap font-serif text-2xl leading-snug text-ink md:text-4xl md:leading-[1.2]">
                     “{testimonial.comment}”
                   </p>
                 </blockquote>
-                <div className="mt-6 flex flex-wrap items-center gap-4">
+                <div className="mt-8 flex flex-wrap items-center gap-4">
+                  <RatingStars rating={testimonial.rating} className="text-sm text-accent" />
                   <h2 className="font-serif text-lg text-ink">{testimonial.displayName}</h2>
-                  <RatingStars rating={testimonial.rating} className="text-accent" />
                 </div>
               </article>
             ))}

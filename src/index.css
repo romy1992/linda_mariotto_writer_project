@@ -64,4 +64,30 @@
     --tw-prose-quotes: var(--color-ink);
     --tw-prose-quote-borders: var(--color-accent);
   }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .reveal {
+    animation: fade-up 0.7s ease-out both;
+  }
+
+  .reveal-delay-1 {
+    animation-delay: 0.12s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal-delay-1 {
+      animation: none;
+    }
+  }
 }
