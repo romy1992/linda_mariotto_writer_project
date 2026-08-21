@@ -7,5 +7,6 @@ export interface ContactRequest {
   projectType: string;
   message: string;
   privacyAccepted: boolean;
+  privacyNoticeVersion: string;
   createdAt: number;
 }

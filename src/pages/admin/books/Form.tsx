@@ -9,6 +9,8 @@ import { Field, inputClass } from "../../../components/ui/Field";
 import { ImageUploader } from "../../../components/media/ImageUploader";
 import { slugify } from "../../../utils/slugify";
 import { getSaveErrorMessage } from "../../../utils/getSaveErrorMessage";
+import { AiGenerateButton } from "../../../components/ai/AiGenerateButton";
+import { AiCorrectButton } from "../../../components/ai/AiCorrectButton";
 import type { Book } from "../../../types";
 
 const schema = z.object({
@@ -39,6 +41,7 @@ export function BookForm() {
     handleSubmit,
     reset,
     setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(schema),
@@ -92,6 +95,18 @@ export function BookForm() {
 
         <Field label="Descrizione" error={errors.description?.message}>
           <textarea rows={4} {...register("description")} className={inputClass} />
+          <AiGenerateButton
+            contentType="book"
+            fieldKey="description"
+            context={{ title: getValues("title") }}
+            onGenerated={(text) => setValue("description", text, { shouldDirty: true })}
+          />
+          <AiCorrectButton
+            contentType="book"
+            fieldKey="description"
+            getText={() => getValues("description")}
+            onCorrected={(text) => setValue("description", text, { shouldDirty: true })}
+          />
         </Field>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

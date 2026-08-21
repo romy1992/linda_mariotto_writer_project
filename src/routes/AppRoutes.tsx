@@ -13,7 +13,9 @@ import { Books } from "../pages/public/Books";
 import { BookDetail } from "../pages/public/BookDetail";
 import { Articles } from "../pages/public/Articles";
 import { ArticleDetail } from "../pages/public/ArticleDetail";
+import { Testimonials } from "../pages/public/Testimonials";
 import { Contact } from "../pages/public/Contact";
+import { Privacy } from "../pages/public/Privacy";
 import { NotFound } from "../pages/public/NotFound";
 
 // Admin bundle (auth forms, Tiptap editor, react-hook-form/zod) is lazy-loaded
@@ -31,6 +33,9 @@ const Profile = lazy(() =>
 const Media = lazy(() => import("../pages/admin/Media").then((m) => ({ default: m.Media })));
 const Contacts = lazy(() =>
   import("../pages/admin/Contacts").then((m) => ({ default: m.Contacts })),
+);
+const TestimonialsAdmin = lazy(() =>
+  import("../pages/admin/Testimonials").then((m) => ({ default: m.TestimonialsAdmin })),
 );
 const ServicesList = lazy(() =>
   import("../pages/admin/services/List").then((m) => ({ default: m.ServicesList })),
@@ -81,7 +86,9 @@ export function AppRoutes() {
         <Route path="libri/:slug" element={<BookDetail />} />
         <Route path="articoli" element={<Articles />} />
         <Route path="articoli/:slug" element={<ArticleDetail />} />
+        <Route path="dicono-di-me" element={<Testimonials />} />
         <Route path="contatti" element={<Contact />} />
+        <Route path="privacy" element={<Privacy />} />
         <Route path="*" element={<NotFound />} />
       </Route>
 
@@ -115,6 +122,7 @@ export function AppRoutes() {
           <Route path="social" element={<SocialList />} />
           <Route path="social/:id" element={<SocialForm />} />
           <Route path="media" element={<Media />} />
+          <Route path="recensioni" element={<TestimonialsAdmin />} />
           <Route path="contatti" element={<Contacts />} />
         </Route>
       </Route>

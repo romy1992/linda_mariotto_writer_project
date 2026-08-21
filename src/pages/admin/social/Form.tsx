@@ -8,6 +8,8 @@ import { socialPostsService } from "../../../services/socialPosts.service";
 import { Field, inputClass } from "../../../components/ui/Field";
 import { ImageUploader } from "../../../components/media/ImageUploader";
 import { getSaveErrorMessage } from "../../../utils/getSaveErrorMessage";
+import { AiGenerateButton } from "../../../components/ai/AiGenerateButton";
+import { AiCorrectButton } from "../../../components/ai/AiCorrectButton";
 import type { SocialPost } from "../../../types";
 
 const schema = z.object({
@@ -38,6 +40,8 @@ export function SocialForm() {
     register,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -116,14 +120,58 @@ export function SocialForm() {
 
         <Field label="Testo" error={errors.text?.message}>
           <textarea rows={5} {...register("text")} className={inputClass} />
+          <AiGenerateButton
+            contentType="social"
+            fieldKey="text"
+            context={{
+              internalTitle: getValues("internalTitle"),
+              platform: getValues("platform"),
+              type: getValues("type"),
+            }}
+            onGenerated={(text) => setValue("text", text, { shouldDirty: true })}
+          />
+          <AiCorrectButton
+            contentType="social"
+            fieldKey="text"
+            getText={() => getValues("text") ?? ""}
+            onCorrected={(text) => setValue("text", text, { shouldDirty: true })}
+          />
         </Field>
 
         <Field label="Caption" error={errors.caption?.message}>
           <textarea rows={2} {...register("caption")} className={inputClass} />
+          <AiGenerateButton
+            contentType="social"
+            fieldKey="caption"
+            context={{ internalTitle: getValues("internalTitle"), text: getValues("text") ?? "" }}
+            onGenerated={(text) => setValue("caption", text, { shouldDirty: true })}
+          />
+          <AiCorrectButton
+            contentType="social"
+            fieldKey="caption"
+            getText={() => getValues("caption") ?? ""}
+            onCorrected={(text) => setValue("caption", text, { shouldDirty: true })}
+          />
         </Field>
 
         <Field label="Hashtag (separati da virgola)" error={errors.hashtagsInput?.message}>
           <input {...register("hashtagsInput")} className={inputClass} />
+          <AiGenerateButton
+            contentType="social"
+            fieldKey="hashtagsInput"
+            context={{
+              internalTitle: getValues("internalTitle"),
+              text: getValues("text") ?? "",
+              caption: getValues("caption") ?? "",
+            }}
+            onGenerated={(text) => setValue("hashtagsInput", text, { shouldDirty: true })}
+          />
+          <AiCorrectButton
+            contentType="social"
+            fieldKey="hashtagsInput"
+            getText={() => getValues("hashtagsInput") ?? ""}
+            onCorrected={(text) => setValue("hashtagsInput", text, { shouldDirty: true })}
+          />
         </Field>
 
         <div>

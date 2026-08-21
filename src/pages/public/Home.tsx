@@ -4,6 +4,7 @@ import { limit, orderBy, where } from "firebase/firestore";
 import { useDocument } from "../../hooks/useDocument";
 import { useCollection } from "../../hooks/useCollection";
 import { Seo } from "../../components/seo/Seo";
+import { SHOW_PORTFOLIO_PUBLICLY } from "../../constants/features";
 import type { Article, PortfolioItem, Service, SiteSettings } from "../../types";
 
 export function Home() {
@@ -89,7 +90,7 @@ export function Home() {
         </section>
       )}
 
-      {portfolio.length > 0 && (
+      {SHOW_PORTFOLIO_PUBLICLY && portfolio.length > 0 && (
         <section className="border-t border-line">
           <div className="mx-auto max-w-5xl px-6 py-16">
             <h2 className="mb-8 font-serif text-2xl text-ink">Lavori selezionati</h2>

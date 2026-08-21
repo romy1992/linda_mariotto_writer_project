@@ -5,3 +5,4 @@ export * from "./book.types";
 export * from "./article.types";
 export * from "./socialPost.types";
 export * from "./contact.types";
+export * from "./testimonial.types";

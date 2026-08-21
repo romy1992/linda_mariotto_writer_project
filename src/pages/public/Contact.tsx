@@ -1,18 +1,26 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Seo } from "../../components/seo/Seo";
+import { PRIVACY_NOTICE_VERSION } from "../../constants/privacy";
 import { contactsService } from "../../services/contacts.service";
 
 const contactSchema = z.object({
-  firstName: z.string().min(1, "Campo obbligatorio"),
-  lastName: z.string().min(1, "Campo obbligatorio"),
-  email: z.string().email("Email non valida"),
-  phone: z.string().optional(),
+  firstName: z.string().trim().min(1, "Campo obbligatorio").max(100, "Massimo 100 caratteri"),
+  lastName: z.string().trim().min(1, "Campo obbligatorio").max(100, "Massimo 100 caratteri"),
+  email: z.string().trim().email("Email non valida").max(320, "Email troppo lunga"),
+  phone: z.string().trim().max(30, "Massimo 30 caratteri").optional(),
   projectType: z.string().min(1, "Seleziona una tipologia"),
-  message: z.string().min(10, "Racconta qualcosa in più sul progetto"),
-  privacyAccepted: z.boolean().refine((v) => v, "Devi accettare la privacy policy"),
+  message: z
+    .string()
+    .trim()
+    .min(10, "Racconta qualcosa in più sul progetto")
+    .max(5000, "Massimo 5.000 caratteri"),
+  privacyNoticeAcknowledged: z
+    .boolean()
+    .refine((value) => value, "Devi confermare di aver letto l'informativa privacy"),
 });
 
 type ContactFormValues = z.infer<typeof contactSchema>;
@@ -38,7 +46,13 @@ export function Contact() {
   } = useForm<ContactFormValues>({ resolver: zodResolver(contactSchema) });
 
   async function onSubmit(values: ContactFormValues) {
-    await contactsService.create({ ...values, createdAt: Date.now() });
+    const { privacyNoticeAcknowledged, ...contactData } = values;
+    await contactsService.create({
+      ...contactData,
+      privacyAccepted: privacyNoticeAcknowledged,
+      privacyNoticeVersion: PRIVACY_NOTICE_VERSION,
+      createdAt: Date.now(),
+    });
     setIsSent(true);
     reset();
   }
@@ -130,11 +144,27 @@ export function Contact() {
             </div>
 
             <label className="flex items-start gap-2 text-sm text-muted">
-              <input type="checkbox" {...register("privacyAccepted")} className="mt-1" />
-              Ho letto e accetto l'informativa sulla privacy.
+              <input
+                type="checkbox"
+                {...register("privacyNoticeAcknowledged")}
+                aria-invalid={Boolean(errors.privacyNoticeAcknowledged)}
+                aria-describedby={
+                  errors.privacyNoticeAcknowledged ? "privacy-notice-error" : undefined
+                }
+                className="mt-1"
+              />
+              <span>
+                Ho letto l'
+                <Link to="/privacy" target="_blank" className="underline hover:text-ink">
+                  informativa privacy
+                </Link>
+                {" "}relativa ai dati inviati con questo modulo.
+              </span>
             </label>
-            {errors.privacyAccepted && (
-              <p className="text-xs text-red-700">{errors.privacyAccepted.message}</p>
+            {errors.privacyNoticeAcknowledged && (
+              <p id="privacy-notice-error" className="text-xs text-red-700">
+                {errors.privacyNoticeAcknowledged.message}
+              </p>
             )}
 
             <button

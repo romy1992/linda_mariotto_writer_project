@@ -10,6 +10,8 @@ import { RichTextEditor } from "../../../components/editor/RichTextEditor";
 import { ImageUploader } from "../../../components/media/ImageUploader";
 import { slugify } from "../../../utils/slugify";
 import { getSaveErrorMessage } from "../../../utils/getSaveErrorMessage";
+import { AiGenerateButton } from "../../../components/ai/AiGenerateButton";
+import { AiCorrectButton } from "../../../components/ai/AiCorrectButton";
 import type { PortfolioItem } from "../../../types";
 
 const schema = z.object({
@@ -45,6 +47,7 @@ export function PortfolioForm() {
     handleSubmit,
     reset,
     setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(schema),
@@ -114,6 +117,18 @@ export function PortfolioForm() {
 
         <Field label="Descrizione" error={errors.description?.message}>
           <textarea rows={2} {...register("description")} className={inputClass} />
+          <AiGenerateButton
+            contentType="portfolio"
+            fieldKey="description"
+            context={{ title: getValues("title"), category: getValues("category") }}
+            onGenerated={(text) => setValue("description", text, { shouldDirty: true })}
+          />
+          <AiCorrectButton
+            contentType="portfolio"
+            fieldKey="description"
+            getText={() => getValues("description")}
+            onCorrected={(text) => setValue("description", text, { shouldDirty: true })}
+          />
         </Field>
 
         <Field label="Contenuto" error={errors.content?.message}>
@@ -121,7 +136,25 @@ export function PortfolioForm() {
             name="content"
             control={control}
             render={({ field }) => (
-              <RichTextEditor value={field.value ?? ""} onChange={field.onChange} />
+              <>
+                <RichTextEditor value={field.value ?? ""} onChange={field.onChange} />
+                <AiGenerateButton
+                  contentType="portfolio"
+                  fieldKey="content"
+                  context={{
+                    title: getValues("title"),
+                    category: getValues("category"),
+                    description: getValues("description"),
+                  }}
+                  onGenerated={(html) => field.onChange(html)}
+                />
+                <AiCorrectButton
+                  contentType="portfolio"
+                  fieldKey="content"
+                  getText={() => field.value ?? ""}
+                  onCorrected={(html) => field.onChange(html)}
+                />
+              </>
             )}
           />
         </Field>

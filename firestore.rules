@@ -48,13 +48,109 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // Visitors can submit a review, but it remains private until the admin
+    // publishes it. Only published reviews can be queried publicly.
+    match /testimonials/{id} {
+      allow read: if (resource.data.status == 'published'
+                        && resource.data.isDemo == false)
+                      || isAdmin();
+      allow create: if isAdmin()
+                    || (request.resource.data.keys().hasAll(
+                          [
+                            'displayName',
+                            'rating',
+                            'comment',
+                            'status',
+                            'isDemo',
+                            'publicationConsent',
+                            'privacyNoticeVersion',
+                            'createdAt',
+                            'updatedAt'
+                          ]
+                        )
+                        && request.resource.data.keys().hasOnly(
+                          [
+                            'displayName',
+                            'rating',
+                            'comment',
+                            'status',
+                            'isDemo',
+                            'publicationConsent',
+                            'privacyNoticeVersion',
+                            'createdAt',
+                            'updatedAt'
+                          ]
+                        )
+                        && request.resource.data.displayName is string
+                        && request.resource.data.displayName.size() >= 2
+                        && request.resource.data.displayName.size() <= 80
+                        && request.resource.data.rating is int
+                        && request.resource.data.rating >= 1
+                        && request.resource.data.rating <= 5
+                        && request.resource.data.comment is string
+                        && request.resource.data.comment.size() >= 20
+                        && request.resource.data.comment.size() <= 1500
+                        && request.resource.data.status == 'pending'
+                        && request.resource.data.isDemo == false
+                        && request.resource.data.publicationConsent == true
+                        && request.resource.data.privacyNoticeVersion == '2026-08-21-v2'
+                        && request.resource.data.createdAt is int
+                        && request.resource.data.updatedAt is int);
+      allow update, delete: if isAdmin();
+    }
+
     // Anyone can submit a contact request, nobody but the admin can read
     // or manage them afterwards.
     match /contacts/{id} {
       allow create: if request.resource.data.keys().hasAll(
-                        ['firstName', 'lastName', 'email', 'message', 'privacyAccepted']
+                        [
+                          'firstName',
+                          'lastName',
+                          'email',
+                          'projectType',
+                          'message',
+                          'privacyAccepted',
+                          'privacyNoticeVersion',
+                          'createdAt'
+                        ]
                       )
-                      && request.resource.data.privacyAccepted == true;
+                      && request.resource.data.keys().hasOnly(
+                        [
+                          'firstName',
+                          'lastName',
+                          'email',
+                          'phone',
+                          'projectType',
+                          'message',
+                          'privacyAccepted',
+                          'privacyNoticeVersion',
+                          'createdAt'
+                        ]
+                      )
+                      && request.resource.data.firstName is string
+                      && request.resource.data.firstName.size() > 0
+                      && request.resource.data.firstName.size() <= 100
+                      && request.resource.data.lastName is string
+                      && request.resource.data.lastName.size() > 0
+                      && request.resource.data.lastName.size() <= 100
+                      && request.resource.data.email is string
+                      && request.resource.data.email.size() > 0
+                      && request.resource.data.email.size() <= 320
+                      && (!('phone' in request.resource.data)
+                          || (request.resource.data.phone is string
+                              && request.resource.data.phone.size() <= 30))
+                      && request.resource.data.projectType is string
+                      && request.resource.data.projectType.size() > 0
+                      && request.resource.data.projectType.size() <= 100
+                      && request.resource.data.message is string
+                      && request.resource.data.message.size() >= 10
+                      && request.resource.data.message.size() <= 5000
+                      && request.resource.data.privacyAccepted == true
+                      && request.resource.data.privacyNoticeVersion in [
+                        '2026-08-21',
+                        '2026-08-21-v2'
+                      ]
+                      && request.resource.data.createdAt is int;
       allow read, update, delete: if isAdmin();
     }
   }

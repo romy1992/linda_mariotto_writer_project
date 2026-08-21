@@ -10,6 +10,8 @@ import { RichTextEditor } from "../../../components/editor/RichTextEditor";
 import { ImageUploader } from "../../../components/media/ImageUploader";
 import { slugify } from "../../../utils/slugify";
 import { getSaveErrorMessage } from "../../../utils/getSaveErrorMessage";
+import { AiGenerateButton } from "../../../components/ai/AiGenerateButton";
+import { AiCorrectButton } from "../../../components/ai/AiCorrectButton";
 import type { Service } from "../../../types";
 
 const schema = z.object({
@@ -40,6 +42,7 @@ export function ServiceForm() {
     handleSubmit,
     reset,
     setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(schema),
@@ -95,6 +98,18 @@ export function ServiceForm() {
 
         <Field label="Descrizione breve" error={errors.shortDescription?.message}>
           <textarea rows={2} {...register("shortDescription")} className={inputClass} />
+          <AiGenerateButton
+            contentType="service"
+            fieldKey="shortDescription"
+            context={{ title: getValues("title") }}
+            onGenerated={(text) => setValue("shortDescription", text, { shouldDirty: true })}
+          />
+          <AiCorrectButton
+            contentType="service"
+            fieldKey="shortDescription"
+            getText={() => getValues("shortDescription")}
+            onCorrected={(text) => setValue("shortDescription", text, { shouldDirty: true })}
+          />
         </Field>
 
         <Field label="Contenuto" error={errors.content?.message}>
@@ -102,7 +117,24 @@ export function ServiceForm() {
             name="content"
             control={control}
             render={({ field }) => (
-              <RichTextEditor value={field.value ?? ""} onChange={field.onChange} />
+              <>
+                <RichTextEditor value={field.value ?? ""} onChange={field.onChange} />
+                <AiGenerateButton
+                  contentType="service"
+                  fieldKey="content"
+                  context={{
+                    title: getValues("title"),
+                    shortDescription: getValues("shortDescription"),
+                  }}
+                  onGenerated={(html) => field.onChange(html)}
+                />
+                <AiCorrectButton
+                  contentType="service"
+                  fieldKey="content"
+                  getText={() => field.value ?? ""}
+                  onCorrected={(html) => field.onChange(html)}
+                />
+              </>
             )}
           />
         </Field>
@@ -126,10 +158,34 @@ export function ServiceForm() {
 
         <Field label="SEO Title" error={errors.seoTitle?.message}>
           <input {...register("seoTitle")} className={inputClass} />
+          <AiGenerateButton
+            contentType="service"
+            fieldKey="seoTitle"
+            context={{ title: getValues("title"), shortDescription: getValues("shortDescription") }}
+            onGenerated={(text) => setValue("seoTitle", text, { shouldDirty: true })}
+          />
+          <AiCorrectButton
+            contentType="service"
+            fieldKey="seoTitle"
+            getText={() => getValues("seoTitle")}
+            onCorrected={(text) => setValue("seoTitle", text, { shouldDirty: true })}
+          />
         </Field>
 
         <Field label="Meta description" error={errors.metaDescription?.message}>
           <textarea rows={2} {...register("metaDescription")} className={inputClass} />
+          <AiGenerateButton
+            contentType="service"
+            fieldKey="metaDescription"
+            context={{ title: getValues("title"), shortDescription: getValues("shortDescription") }}
+            onGenerated={(text) => setValue("metaDescription", text, { shouldDirty: true })}
+          />
+          <AiCorrectButton
+            contentType="service"
+            fieldKey="metaDescription"
+            getText={() => getValues("metaDescription")}
+            onCorrected={(text) => setValue("metaDescription", text, { shouldDirty: true })}
+          />
         </Field>
 
         {saveError && <p className="text-sm text-red-700">{saveError}</p>}

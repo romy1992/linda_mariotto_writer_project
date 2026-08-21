@@ -7,9 +7,11 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/config";
 
+const EMPTY_CONSTRAINTS: QueryConstraint[] = [];
+
 export function useCollection<T>(
   collectionPath: string,
-  constraints: QueryConstraint[] = [],
+  constraints: QueryConstraint[] = EMPTY_CONSTRAINTS,
 ) {
   const [data, setData] = useState<T[]>([]);
   const [isLoading, setIsLoading] = useState(true);

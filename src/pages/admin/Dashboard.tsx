@@ -1,5 +1,13 @@
 import { useCollection } from "../../hooks/useCollection";
-import type { Article, Book, ContactRequest, PortfolioItem, Service, SocialPost } from "../../types";
+import type {
+  Article,
+  Book,
+  ContactRequest,
+  PortfolioItem,
+  Service,
+  SocialPost,
+  Testimonial,
+} from "../../types";
 
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
@@ -17,9 +25,11 @@ export function Dashboard() {
   const { data: books } = useCollection<Book>("books");
   const { data: socialPosts } = useCollection<SocialPost>("socialPosts");
   const { data: contacts } = useCollection<ContactRequest>("contacts");
+  const { data: testimonials } = useCollection<Testimonial>("testimonials");
 
   const publishedArticles = articles.filter((a) => a.status === "published").length;
   const draftArticles = articles.filter((a) => a.status === "draft").length;
+  const pendingTestimonials = testimonials.filter((item) => item.status === "pending").length;
 
   return (
     <div>
@@ -31,6 +41,7 @@ export function Dashboard() {
         <StatCard label="Lavori" value={portfolio.length} />
         <StatCard label="Libri" value={books.length} />
         <StatCard label="Contenuti social" value={socialPosts.length} />
+        <StatCard label="Recensioni da approvare" value={pendingTestimonials} />
         <StatCard label="Richieste contatto" value={contacts.length} />
       </div>
     </div>

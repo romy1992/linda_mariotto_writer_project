@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase/config";
+
+function SectionFallback() {
+  return <div className="p-6 text-muted">Caricamento…</div>;
+}
 
 const NAV_LINKS = [
   { to: "/admin", label: "Dashboard", end: true },
@@ -12,6 +16,7 @@ const NAV_LINKS = [
   { to: "/admin/articoli", label: "Articoli" },
   { to: "/admin/social", label: "Social" },
   { to: "/admin/media", label: "Media" },
+  { to: "/admin/recensioni", label: "Recensioni" },
   { to: "/admin/contatti", label: "Contatti" },
 ];
 
@@ -70,7 +75,9 @@ export function AdminLayout() {
         </button>
       </aside>
       <main className="flex-1 p-6 md:p-8">
-        <Outlet />
+        <Suspense fallback={<SectionFallback />}>
+          <Outlet />
+        </Suspense>
       </main>
     </div>
   );

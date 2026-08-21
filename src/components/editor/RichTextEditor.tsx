@@ -20,7 +20,9 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
   });
 
   useEffect(() => {
-    if (editor && value !== editor.getHTML() && document.activeElement?.closest(".ProseMirror") == null) {
+    if (!editor || !editor.isInitialized || editor.isDestroyed) return;
+
+    if (value !== editor.getHTML() && document.activeElement?.closest(".ProseMirror") == null) {
       editor.commands.setContent(value);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

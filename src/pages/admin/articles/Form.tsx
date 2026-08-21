@@ -10,6 +10,8 @@ import { RichTextEditor } from "../../../components/editor/RichTextEditor";
 import { ImageUploader } from "../../../components/media/ImageUploader";
 import { slugify } from "../../../utils/slugify";
 import { getSaveErrorMessage } from "../../../utils/getSaveErrorMessage";
+import { AiGenerateButton } from "../../../components/ai/AiGenerateButton";
+import { AiCorrectButton } from "../../../components/ai/AiCorrectButton";
 import type { Article } from "../../../types";
 
 const schema = z.object({
@@ -40,6 +42,7 @@ export function ArticleForm() {
     handleSubmit,
     reset,
     setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -110,6 +113,18 @@ export function ArticleForm() {
 
         <Field label="Excerpt" error={errors.excerpt?.message}>
           <textarea rows={2} {...register("excerpt")} className={inputClass} />
+          <AiGenerateButton
+            contentType="article"
+            fieldKey="excerpt"
+            context={{ title: getValues("title"), category: getValues("category") }}
+            onGenerated={(text) => setValue("excerpt", text, { shouldDirty: true })}
+          />
+          <AiCorrectButton
+            contentType="article"
+            fieldKey="excerpt"
+            getText={() => getValues("excerpt")}
+            onCorrected={(text) => setValue("excerpt", text, { shouldDirty: true })}
+          />
         </Field>
 
         <div>
@@ -122,7 +137,25 @@ export function ArticleForm() {
             name="content"
             control={control}
             render={({ field }) => (
-              <RichTextEditor value={field.value ?? ""} onChange={field.onChange} />
+              <>
+                <RichTextEditor value={field.value ?? ""} onChange={field.onChange} />
+                <AiGenerateButton
+                  contentType="article"
+                  fieldKey="content"
+                  context={{
+                    title: getValues("title"),
+                    category: getValues("category"),
+                    excerpt: getValues("excerpt"),
+                  }}
+                  onGenerated={(html) => field.onChange(html)}
+                />
+                <AiCorrectButton
+                  contentType="article"
+                  fieldKey="content"
+                  getText={() => field.value ?? ""}
+                  onCorrected={(html) => field.onChange(html)}
+                />
+              </>
             )}
           />
         </Field>
@@ -133,6 +166,22 @@ export function ArticleForm() {
           </Field>
           <Field label="Tag (separati da virgola)" error={errors.tagsInput?.message}>
             <input {...register("tagsInput")} className={inputClass} />
+            <AiGenerateButton
+              contentType="article"
+              fieldKey="tagsInput"
+              context={{
+                title: getValues("title"),
+                category: getValues("category"),
+                excerpt: getValues("excerpt"),
+              }}
+              onGenerated={(text) => setValue("tagsInput", text, { shouldDirty: true })}
+            />
+            <AiCorrectButton
+              contentType="article"
+              fieldKey="tagsInput"
+              getText={() => getValues("tagsInput") ?? ""}
+              onCorrected={(text) => setValue("tagsInput", text, { shouldDirty: true })}
+            />
           </Field>
         </div>
 
@@ -146,10 +195,34 @@ export function ArticleForm() {
 
         <Field label="SEO Title" error={errors.seoTitle?.message}>
           <input {...register("seoTitle")} className={inputClass} />
+          <AiGenerateButton
+            contentType="article"
+            fieldKey="seoTitle"
+            context={{ title: getValues("title"), excerpt: getValues("excerpt") }}
+            onGenerated={(text) => setValue("seoTitle", text, { shouldDirty: true })}
+          />
+          <AiCorrectButton
+            contentType="article"
+            fieldKey="seoTitle"
+            getText={() => getValues("seoTitle")}
+            onCorrected={(text) => setValue("seoTitle", text, { shouldDirty: true })}
+          />
         </Field>
 
         <Field label="Meta description" error={errors.metaDescription?.message}>
           <textarea rows={2} {...register("metaDescription")} className={inputClass} />
+          <AiGenerateButton
+            contentType="article"
+            fieldKey="metaDescription"
+            context={{ title: getValues("title"), excerpt: getValues("excerpt") }}
+            onGenerated={(text) => setValue("metaDescription", text, { shouldDirty: true })}
+          />
+          <AiCorrectButton
+            contentType="article"
+            fieldKey="metaDescription"
+            getText={() => getValues("metaDescription")}
+            onCorrected={(text) => setValue("metaDescription", text, { shouldDirty: true })}
+          />
         </Field>
 
         {saveError && <p className="text-sm text-red-700">{saveError}</p>}

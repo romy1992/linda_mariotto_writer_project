@@ -4,9 +4,9 @@ import { NavLink, Outlet } from "react-router-dom";
 const NAV_LINKS = [
   { to: "/chi-sono", label: "Chi sono" },
   { to: "/servizi", label: "Servizi" },
-  { to: "/lavori", label: "Lavori" },
   { to: "/libri", label: "Libri" },
   { to: "/articoli", label: "Articoli" },
+  { to: "/dicono-di-me", label: "Dicono di me" },
   { to: "/contatti", label: "Contatti" },
 ];
 
@@ -71,8 +71,11 @@ export function PublicLayout() {
       </main>
 
       <footer className="border-t border-line">
-        <div className="mx-auto max-w-5xl px-6 py-10 text-sm text-muted">
-          © {new Date().getFullYear()} Linda Mariotto — Ghostwriter
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-10 text-sm text-muted">
+          <span>© {new Date().getFullYear()} Linda Mariotto — Ghostwriter</span>
+          <NavLink to="/privacy" className="hover:text-ink">
+            Privacy
+          </NavLink>
         </div>
       </footer>
     </div>
