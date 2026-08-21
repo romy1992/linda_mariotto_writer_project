@@ -17,9 +17,10 @@ export function Privacy() {
         title="Informativa privacy — Linda Mariotto"
         description="Informativa sul trattamento dei dati personali ai sensi dell'art. 13 del Regolamento UE 2016/679 (GDPR)."
       />
-      <section className="mx-auto max-w-2xl px-6 py-20">
-        <h1 className="mb-2 font-serif text-3xl text-ink md:text-4xl">Informativa privacy</h1>
-        <p className="mb-10 text-sm text-muted">
+      <section className="mx-auto max-w-2xl px-6 py-20 md:py-28">
+        <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Legale</p>
+        <h1 className="mb-2 font-serif text-4xl text-ink md:text-5xl">Informativa privacy</h1>
+        <p className="mb-12 text-sm text-muted">
           Informativa ai sensi dell'art. 13 del Regolamento UE 2016/679 (GDPR)
         </p>
 

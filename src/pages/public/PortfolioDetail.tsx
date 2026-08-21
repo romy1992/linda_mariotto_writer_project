@@ -35,20 +35,21 @@ export function PortfolioDetail() {
   return (
     <>
       <Seo title={item.title} description={item.description} />
-      <section className="mx-auto max-w-3xl px-6 py-20">
-        <Link to="/lavori" className="mb-8 inline-block text-sm text-accent">
+      <section className="mx-auto max-w-3xl px-6 py-20 md:py-28">
+        <Link to="/lavori" className="mb-10 inline-block text-sm tracking-wide text-accent transition-colors hover:text-ink">
           ← Tutti i lavori
         </Link>
-        <h1 className="mb-2 font-serif text-3xl text-ink md:text-4xl">{item.title}</h1>
-        <p className="mb-6 text-sm text-muted">
+        <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Lavoro</p>
+        <h1 className="mb-3 font-serif text-4xl text-ink md:text-5xl">{item.title}</h1>
+        <p className="mb-8 text-sm text-muted">
           {item.category} — {item.year}
           {item.client ? ` — ${item.client}` : ""}
         </p>
         {item.imageURL && (
-          <img src={item.imageURL} alt={item.title} className="mb-8 w-full object-cover" />
+          <img src={item.imageURL} alt={item.title} className="mb-10 w-full object-cover" />
         )}
         <div
-          className="prose prose-neutral max-w-none"
+          className="prose prose-neutral prose-editorial max-w-none"
           dangerouslySetInnerHTML={{ __html: item.content }}
         />
         {item.externalLink && (
@@ -56,7 +57,7 @@ export function PortfolioDetail() {
             href={item.externalLink}
             target="_blank"
             rel="noreferrer"
-            className="mt-8 inline-block text-sm text-accent"
+            className="mt-10 inline-block text-sm tracking-wide text-accent transition-colors hover:text-ink"
           >
             Vedi il progetto →
           </a>

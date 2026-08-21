@@ -80,46 +80,51 @@ export function Testimonials() {
         description="Recensioni sul lavoro di Linda Mariotto e modulo per condividere la propria esperienza."
       />
 
-      <section className="mx-auto max-w-5xl px-6 py-20">
-        <div className="max-w-2xl">
-          <p className="mb-3 text-sm uppercase tracking-widest text-accent">Testimonianze</p>
-          <h1 className="font-serif text-3xl text-ink md:text-4xl">Dicono di me</h1>
-          <p className="mt-4 leading-relaxed text-muted">
-            Esperienze condivise da chi ha lavorato con me. Le recensioni vengono controllate
-            prima della pubblicazione.
-          </p>
-        </div>
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+          <div className="max-w-2xl">
+            <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Testimonianze</p>
+            <h1 className="font-serif text-4xl text-ink md:text-5xl">Dicono di me</h1>
+            <p className="mt-5 leading-relaxed text-muted">
+              Esperienze condivise da chi ha lavorato con me. Le recensioni vengono controllate
+              prima della pubblicazione.
+            </p>
+          </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {testimonials.map((testimonial) => (
-            <article key={testimonial.id} className="border border-line p-6">
-              <div>
-                <h2 className="font-serif text-lg text-ink">{testimonial.displayName}</h2>
-                <RatingStars rating={testimonial.rating} className="text-accent" />
-              </div>
-              <p className="mt-4 whitespace-pre-wrap leading-relaxed text-muted">
-                {testimonial.comment}
-              </p>
-            </article>
-          ))}
-        </div>
+          <div className="mt-16 space-y-14 md:mt-20 md:space-y-20">
+            {testimonials.map((testimonial) => (
+              <article key={testimonial.id} className="border-l border-accent pl-6 md:pl-10">
+                <blockquote>
+                  <p className="whitespace-pre-wrap font-serif text-2xl leading-snug text-ink md:text-3xl md:leading-snug">
+                    “{testimonial.comment}”
+                  </p>
+                </blockquote>
+                <div className="mt-6 flex flex-wrap items-center gap-4">
+                  <h2 className="font-serif text-lg text-ink">{testimonial.displayName}</h2>
+                  <RatingStars rating={testimonial.rating} className="text-accent" />
+                </div>
+              </article>
+            ))}
+          </div>
 
-        {isLoading && <p className="mt-8 text-muted">Caricamento recensioni…</p>}
-        {!isLoading && testimonials.length === 0 && (
-          <p className="mt-8 text-muted">Non ci sono ancora recensioni pubblicate.</p>
-        )}
+          {isLoading && <p className="mt-12 text-muted">Caricamento recensioni…</p>}
+          {!isLoading && testimonials.length === 0 && (
+            <p className="mt-12 text-muted">Non ci sono ancora recensioni pubblicate.</p>
+          )}
+        </div>
       </section>
 
-      <section className="border-t border-line">
-        <div className="mx-auto max-w-xl px-6 py-20">
-          <h2 className="font-serif text-2xl text-ink">Condividi la tua esperienza</h2>
-          <p className="mt-3 text-sm leading-relaxed text-muted">
+      <section className="bg-paper-deep/35">
+        <div className="mx-auto max-w-xl px-6 py-20 md:py-28">
+          <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Scrivi</p>
+          <h2 className="font-serif text-3xl text-ink">Condividi la tua esperienza</h2>
+          <p className="mt-4 text-sm leading-relaxed text-muted">
             Puoi indicare il tuo nome oppure un nome visualizzato. La recensione apparirà sul
             sito solo dopo l'approvazione.
           </p>
 
           {isSent ? (
-            <div className="mt-8 border border-line p-6">
+            <div className="mt-10 border border-line bg-paper p-6">
               <p className="text-ink">Grazie, la recensione è stata inviata.</p>
               <p className="mt-2 text-sm text-muted">
                 Verrà controllata prima di essere resa pubblica.
@@ -127,13 +132,13 @@ export function Testimonials() {
               <button
                 type="button"
                 onClick={() => setIsSent(false)}
-                className="mt-4 text-sm text-accent"
+                className="mt-4 text-sm text-accent transition-colors hover:text-ink"
               >
                 Scrivi un'altra recensione
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-10 space-y-5">
               <div>
                 <label htmlFor="testimonial-name" className="mb-1 block text-sm text-muted">
                   Nome o nome visualizzato
@@ -141,7 +146,7 @@ export function Testimonials() {
                 <input
                   id="testimonial-name"
                   {...register("displayName")}
-                  className="w-full border border-line bg-paper px-3 py-2 text-ink outline-none focus:border-accent"
+                  className="w-full border border-line bg-paper px-3 py-2.5 text-ink outline-none transition-colors focus:border-accent"
                 />
                 {errors.displayName && (
                   <p className="mt-1 text-xs text-red-700">{errors.displayName.message}</p>
@@ -178,7 +183,7 @@ export function Testimonials() {
                   id="testimonial-comment"
                   rows={6}
                   {...register("comment")}
-                  className="w-full border border-line bg-paper px-3 py-2 text-ink outline-none focus:border-accent"
+                  className="w-full border border-line bg-paper px-3 py-2.5 text-ink outline-none transition-colors focus:border-accent"
                 />
                 {errors.comment && (
                   <p className="mt-1 text-xs text-red-700">{errors.comment.message}</p>
@@ -211,7 +216,7 @@ export function Testimonials() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-ink px-6 py-3 text-sm text-paper transition-opacity hover:opacity-90 disabled:opacity-50"
+                className="bg-ink px-6 py-3 text-sm tracking-wide text-paper transition-opacity hover:opacity-90 disabled:opacity-50"
               >
                 {isSubmitting ? "Invio in corso…" : "Invia recensione"}
               </button>

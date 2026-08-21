@@ -30,23 +30,24 @@ export function ServiceDetail() {
   return (
     <>
       <Seo title={service.seoTitle || service.title} description={service.metaDescription || service.shortDescription} />
-      <section className="mx-auto max-w-3xl px-6 py-20">
-        <Link to="/servizi" className="mb-8 inline-block text-sm text-accent">
+      <section className="mx-auto max-w-3xl px-6 py-20 md:py-28">
+        <Link to="/servizi" className="mb-10 inline-block text-sm tracking-wide text-accent transition-colors hover:text-ink">
           ← Tutti i servizi
         </Link>
-        <h1 className="mb-6 font-serif text-3xl text-ink md:text-4xl">{service.title}</h1>
+        <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Servizio</p>
+        <h1 className="mb-8 font-serif text-4xl text-ink md:text-5xl">{service.title}</h1>
         {service.imageURL && (
-          <img src={service.imageURL} alt={service.title} className="mb-8 w-full object-cover" />
+          <img src={service.imageURL} alt={service.title} className="mb-10 w-full object-cover" />
         )}
         <div
-          className="prose prose-neutral max-w-none"
+          className="prose prose-neutral prose-editorial max-w-none"
           dangerouslySetInnerHTML={{ __html: service.content }}
         />
         <Link
           to="/contatti"
-          className="mt-10 inline-block border border-ink px-6 py-3 text-sm text-ink transition-colors hover:bg-ink hover:text-paper"
+          className="mt-12 inline-block border border-ink px-6 py-3.5 text-sm tracking-wide text-ink transition-colors hover:bg-ink hover:text-paper"
         >
-          Richiedi informazioni
+          Raccontami il tuo progetto
         </Link>
       </section>
     </>

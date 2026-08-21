@@ -7,6 +7,7 @@
 
   --color-ink: #1a1a18;
   --color-paper: #faf8f4;
+  --color-paper-deep: #f3efe6;
   --color-accent: #8a6d4f;
   --color-muted: #6b675f;
   --color-line: #e4e0d8;
@@ -21,11 +22,46 @@
     background-color: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-serif);
     font-weight: 500;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-accent) 28%, transparent);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  .editorial-rule {
+    height: 1px;
+    background-color: var(--color-line);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .prose-editorial {
+    --tw-prose-body: var(--color-muted);
+    --tw-prose-headings: var(--color-ink);
+    --tw-prose-links: var(--color-accent);
+    --tw-prose-bold: var(--color-ink);
+    --tw-prose-quotes: var(--color-ink);
+    --tw-prose-quote-borders: var(--color-accent);
   }
 }

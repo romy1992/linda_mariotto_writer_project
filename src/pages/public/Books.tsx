@@ -12,20 +12,25 @@ export function Books() {
   return (
     <>
       <Seo title="Libri — Linda Mariotto" description="Libri e pubblicazioni." />
-      <section className="mx-auto max-w-5xl px-6 py-20">
-        <h1 className="mb-10 font-serif text-3xl text-ink md:text-4xl">Libri</h1>
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+      <section className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+        <div className="max-w-2xl">
+          <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Pubblicazioni</p>
+          <h1 className="font-serif text-4xl text-ink md:text-5xl">Libri</h1>
+        </div>
+        <div className="mt-14 grid gap-10 sm:grid-cols-2 md:grid-cols-4">
           {books.map((book) => (
             <Link key={book.id} to={`/libri/${book.slug}`} className="group">
               {book.coverURL && (
                 <img
                   src={book.coverURL}
                   alt={book.title}
-                  className="mb-3 aspect-[2/3] w-full object-cover"
+                  className="mb-4 aspect-[2/3] w-full object-cover transition-opacity group-hover:opacity-90"
                 />
               )}
-              <h2 className="font-serif text-base text-ink">{book.title}</h2>
-              <p className="text-sm text-muted">{book.year}</p>
+              <h2 className="font-serif text-lg text-ink transition-colors group-hover:text-accent">
+                {book.title}
+              </h2>
+              <p className="mt-1 text-sm text-muted">{book.year}</p>
             </Link>
           ))}
         </div>

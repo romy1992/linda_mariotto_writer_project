@@ -35,25 +35,25 @@ export function ArticleDetail() {
         description={article.metaDescription || article.excerpt}
         image={article.coverURL}
       />
-      <article className="mx-auto max-w-3xl px-6 py-20">
-        <Link to="/articoli" className="mb-8 inline-block text-sm text-accent">
+      <article className="mx-auto max-w-3xl px-6 py-20 md:py-28">
+        <Link to="/articoli" className="mb-10 inline-block text-sm tracking-wide text-accent transition-colors hover:text-ink">
           ← Tutti gli articoli
         </Link>
         <p className="text-sm text-muted">
           {article.publishedAt ? formatDate(article.publishedAt) : ""} · {article.category}
         </p>
-        <h1 className="mb-6 mt-2 font-serif text-3xl text-ink md:text-4xl">{article.title}</h1>
+        <h1 className="mb-8 mt-3 font-serif text-4xl text-ink md:text-5xl">{article.title}</h1>
         {article.coverURL && (
-          <img src={article.coverURL} alt={article.title} className="mb-8 w-full object-cover" />
+          <img src={article.coverURL} alt={article.title} className="mb-10 w-full object-cover" />
         )}
         <div
-          className="prose prose-neutral max-w-none"
+          className="prose prose-neutral prose-editorial max-w-none"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
         {article.tags.length > 0 && (
-          <div className="mt-10 flex flex-wrap gap-2">
+          <div className="mt-12 flex flex-wrap gap-2">
             {article.tags.map((tag) => (
-              <span key={tag} className="border border-line px-3 py-1 text-xs text-muted">
+              <span key={tag} className="border border-line px-3 py-1 text-xs tracking-wide text-muted">
                 {tag}
               </span>
             ))}
