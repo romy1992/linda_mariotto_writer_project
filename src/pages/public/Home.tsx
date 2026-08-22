@@ -16,6 +16,18 @@ import type {
   Testimonial,
 } from "../../types";
 
+const DEFAULT_HERO_TITLE = "Le tue storie.\nLe parole giuste\nper raccontarle.";
+const DEFAULT_MANIFESTO_TITLE = "Scrivo al posto tuo.\nNon al posto della tua voce.";
+const DEFAULT_ABOUT_TITLE = "Una voce al servizio della tua";
+
+function titleLines(value: string | undefined, fallback: string): string[] {
+  const source = value?.trim() ? value : fallback;
+  return source
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
 export function Home() {
   const { data: settings } = useDocument<SiteSettings>("settings", "site");
 
@@ -62,6 +74,13 @@ export function Home() {
   );
 
   const professionalName = settings?.professionalName ?? "Linda Mariotto";
+  const heroTitleLines = titleLines(settings?.homeHeroTitle, DEFAULT_HERO_TITLE);
+  const manifestoTitleLines = titleLines(
+    settings?.homeManifestoTitle,
+    DEFAULT_MANIFESTO_TITLE,
+  );
+  const aboutTitle =
+    settings?.homeAboutTitle?.trim() || DEFAULT_ABOUT_TITLE;
 
   return (
     <>
@@ -78,12 +97,14 @@ export function Home() {
         <div className="mx-auto grid max-w-6xl items-end gap-12 px-6 pb-20 pt-14 md:grid-cols-[1.15fr_0.85fr] md:gap-16 md:pb-28 md:pt-20">
           <div className="reveal">
             <p className="mb-6 text-xs uppercase tracking-[0.22em] text-accent">
-              Ghostwriter &amp; Autrice
+              Autrice &amp; Ghostwriter
             </p>
             <h1 className="max-w-xl text-balance font-serif text-4xl leading-[1.08] text-ink sm:text-5xl md:text-6xl lg:text-7xl">
-              <span className="block">Le tue storie.</span>
-              <span className="block">Le parole giuste</span>
-              <span className="block">per raccontarle.</span>
+              {heroTitleLines.map((line, index) => (
+                <span key={`hero-${index}`} className="block">
+                  {line}
+                </span>
+              ))}
             </h1>
             <p className="mt-8 font-serif text-2xl text-ink md:text-3xl">{professionalName}</p>
             <p className="mt-4 max-w-md text-lg leading-relaxed text-muted md:text-xl">
@@ -130,8 +151,11 @@ export function Home() {
       <section className="border-b border-line">
         <div className="mx-auto max-w-3xl px-6 py-24 text-center md:py-32">
           <h2 className="text-balance font-serif text-3xl leading-[1.15] text-ink md:text-5xl">
-            <span className="block">Scrivo al posto tuo.</span>
-            <span className="block">Non al posto della tua voce.</span>
+            {manifestoTitleLines.map((line, index) => (
+              <span key={`manifesto-${index}`} className="block">
+                {line}
+              </span>
+            ))}
           </h2>
           <p className="mx-auto mt-10 max-w-xl text-base leading-[1.85] text-muted md:text-lg">
             Il mio lavoro non è sostituirmi a te, ma ascoltare abbastanza bene da trasformare
@@ -147,7 +171,7 @@ export function Home() {
             <div>
               <p className="text-xs uppercase tracking-[0.22em] text-accent">Chi sono</p>
               <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">
-                Una voce al servizio della tua
+                {aboutTitle}
               </h2>
             </div>
             <div>

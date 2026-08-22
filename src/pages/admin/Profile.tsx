@@ -15,6 +15,9 @@ const settingsSchema = z.object({
   bio: z.string().min(1, "Campo obbligatorio"),
   philosophy: z.string().optional(),
   method: z.string().optional(),
+  homeHeroTitle: z.string().optional(),
+  homeManifestoTitle: z.string().optional(),
+  homeAboutTitle: z.string().optional(),
   email: z.string().email("Email non valida"),
   phone: z.string().optional(),
   instagramUrl: z.string().optional(),
@@ -40,7 +43,16 @@ export function Profile() {
 
   useEffect(() => {
     if (settings) {
-      reset(settings);
+      reset({
+        ...settings,
+        homeHeroTitle:
+          settings.homeHeroTitle ??
+          "Le tue storie.\nLe parole giuste\nper raccontarle.",
+        homeManifestoTitle:
+          settings.homeManifestoTitle ??
+          "Scrivo al posto tuo.\nNon al posto della tua voce.",
+        homeAboutTitle: settings.homeAboutTitle ?? "Una voce al servizio della tua",
+      });
       setPhotoURL(settings.photoURL);
     }
   }, [settings, reset]);
@@ -74,6 +86,45 @@ export function Profile() {
         <Field label="Payoff" error={errors.payoff?.message}>
           <input {...register("payoff")} className={inputClass} />
         </Field>
+
+        <fieldset className="space-y-5 border-t border-line pt-5">
+          <legend className="mb-1 text-sm font-medium text-ink">Titoli Home</legend>
+          <p className="text-xs leading-relaxed text-muted">
+            Usa una riga per ogni verso del titolo. Se lasci vuoto, resta il testo di default.
+          </p>
+
+          <Field
+            label="Hero — titolo principale"
+            error={errors.homeHeroTitle?.message}
+          >
+            <textarea
+              rows={3}
+              placeholder={"Le tue storie.\nLe parole giuste\nper raccontarle."}
+              {...register("homeHeroTitle")}
+              className={inputClass}
+            />
+          </Field>
+
+          <Field
+            label="Manifesto — titolo"
+            error={errors.homeManifestoTitle?.message}
+          >
+            <textarea
+              rows={2}
+              placeholder={"Scrivo al posto tuo.\nNon al posto della tua voce."}
+              {...register("homeManifestoTitle")}
+              className={inputClass}
+            />
+          </Field>
+
+          <Field label="Chi sono — titolo sezione" error={errors.homeAboutTitle?.message}>
+            <input
+              placeholder="Una voce al servizio della tua"
+              {...register("homeAboutTitle")}
+              className={inputClass}
+            />
+          </Field>
+        </fieldset>
 
         <Field label="Biografia" error={errors.bio?.message}>
           <textarea rows={4} {...register("bio")} className={inputClass} />

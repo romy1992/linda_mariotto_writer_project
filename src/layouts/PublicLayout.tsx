@@ -3,12 +3,16 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useDocument } from "../hooks/useDocument";
 import type { SiteSettings } from "../types";
 
-const NAV_LINKS = [
+const HEADER_NAV_LINKS = [
   { to: "/chi-sono", label: "Chi sono" },
   { to: "/servizi", label: "Servizi" },
   { to: "/libri", label: "Libri" },
   { to: "/articoli", label: "Articoli" },
   { to: "/dicono-di-me", label: "Dicono di me" },
+];
+
+const FOOTER_NAV_LINKS = [
+  ...HEADER_NAV_LINKS,
   { to: "/contatti", label: "Contatti" },
 ];
 
@@ -50,7 +54,7 @@ export function PublicLayout() {
           </NavLink>
 
           <nav className="hidden items-center gap-7 lg:flex" aria-label="Navigazione principale">
-            {NAV_LINKS.map((link) => (
+            {HEADER_NAV_LINKS.map((link) => (
               <NavLink key={link.to} to={link.to} className={navClass}>
                 {link.label}
               </NavLink>
@@ -84,7 +88,7 @@ export function PublicLayout() {
             className="border-t border-line px-6 py-4 lg:hidden"
             aria-label="Navigazione mobile"
           >
-            {NAV_LINKS.map((link) => (
+            {HEADER_NAV_LINKS.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
@@ -124,7 +128,7 @@ export function PublicLayout() {
           <div>
             <p className="mb-4 text-xs uppercase tracking-[0.18em] text-accent">Navigazione</p>
             <ul className="space-y-2 text-sm text-muted">
-              {NAV_LINKS.map((link) => (
+              {FOOTER_NAV_LINKS.map((link) => (
                 <li key={link.to}>
                   <NavLink to={link.to} className="transition-colors hover:text-ink">
                     {link.label}
