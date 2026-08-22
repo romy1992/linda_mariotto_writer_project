@@ -6,25 +6,52 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+firestore-debug.log
+ui-debug.log
+firebase-debug.log
+firebase-debug.*.log
 
+# Dependencies
 node_modules
+functions/node_modules
+
+# Build outputs
 dist
 dist-ssr
 functions/lib
-*.local
+*.tsbuildinfo
 
-# Environment variables (never commit real Firebase project values)
+# Local / secrets (never commit real Firebase project values)
+*.local
 .env
 .env.*
 !.env.example
+functions/.secret.local
+
+# Firebase local cache / hosting deploy cache
+.firebase
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# OS / temp
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Test / coverage
+coverage
+.nyc_output
+
+# Claude / Cursor local settings
+.claude/settings.local.json
