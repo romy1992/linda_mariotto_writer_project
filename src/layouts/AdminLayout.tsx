@@ -10,6 +10,7 @@ function SectionFallback() {
 const NAV_LINKS = [
   { to: "/admin", label: "Dashboard", end: true },
   { to: "/admin/profilo", label: "Profilo" },
+  { to: "/admin/contenuti", label: "Contenuti" },
   { to: "/admin/servizi", label: "Servizi" },
   { to: "/admin/lavori", label: "Lavori" },
   { to: "/admin/libri", label: "Libri" },
@@ -32,7 +33,10 @@ export function AdminLayout() {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       <header className="flex items-center justify-between border-b border-line p-4 md:hidden">
-        <p className="font-serif text-base text-ink">Admin</p>
+        <span className="flex items-center gap-2">
+          <img src="/logo.svg" alt="" className="h-6 w-6" />
+          <p className="font-serif text-base text-ink">Admin</p>
+        </span>
         <button
           type="button"
           aria-label={isMenuOpen ? "Chiudi menu" : "Apri menu"}
@@ -52,7 +56,10 @@ export function AdminLayout() {
       <aside
         className={`${isMenuOpen ? "block" : "hidden"} w-full shrink-0 border-b border-line p-4 md:block md:w-56 md:border-b-0 md:border-r`}
       >
-        <p className="mb-6 hidden px-3 font-serif text-base text-ink md:block">Admin</p>
+        <span className="mb-6 hidden items-center gap-2 px-3 md:flex">
+          <img src="/logo.svg" alt="" className="h-6 w-6" />
+          <p className="font-serif text-base text-ink">Admin</p>
+        </span>
         <nav className="flex flex-col gap-1">
           {NAV_LINKS.map((link) => (
             <NavLink

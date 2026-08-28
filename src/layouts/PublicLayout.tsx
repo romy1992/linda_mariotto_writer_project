@@ -42,14 +42,17 @@ export function PublicLayout() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4 md:py-5">
           <NavLink
             to="/"
-            className="group min-w-0"
+            className="group flex min-w-0 items-center gap-3"
             onClick={() => setIsMenuOpen(false)}
           >
-            <span className="block font-serif text-lg tracking-tight text-ink md:text-xl">
-              {brandName}
-            </span>
-            <span className="mt-0.5 block text-[10px] uppercase tracking-[0.18em] text-muted">
-              Autrice &amp; Ghostwriter
+            <img src="/logo.svg" alt="" className="h-9 w-9 shrink-0" />
+            <span className="min-w-0">
+              <span className="block font-serif text-lg tracking-tight text-ink md:text-xl">
+                {brandName}
+              </span>
+              <span className="mt-0.5 block text-[10px] uppercase tracking-[0.18em] text-muted">
+                Autrice &amp; Ghostwriter
+              </span>
             </span>
           </NavLink>
 
@@ -116,7 +119,10 @@ export function PublicLayout() {
       <footer className="border-t border-line bg-paper-deep/40">
         <div className="mx-auto grid max-w-6xl gap-12 px-6 py-14 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
-            <p className="font-serif text-2xl uppercase tracking-wide text-ink">{brandName}</p>
+            <div className="flex items-center gap-3">
+              <img src="/logo.svg" alt="" className="h-8 w-8 shrink-0" />
+              <p className="font-serif text-2xl uppercase tracking-wide text-ink">{brandName}</p>
+            </div>
             <p className="mt-2 text-xs uppercase tracking-[0.18em] text-muted">
               Autrice &amp; Ghostwriter
             </p>

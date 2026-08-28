@@ -1,0 +1,10 @@
+FROM node:20-trixie-slim
+
+WORKDIR /workspace
+
+COPY docker/site-entrypoint.sh /usr/local/bin/site-entrypoint
+RUN chmod +x /usr/local/bin/site-entrypoint
+
+EXPOSE 5175
+
+ENTRYPOINT ["site-entrypoint"]

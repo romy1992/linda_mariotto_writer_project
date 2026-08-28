@@ -2,23 +2,35 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { where } from "firebase/firestore";
 import { useCollection } from "../../hooks/useCollection";
+import { useDocument } from "../../hooks/useDocument";
 import { Seo } from "../../components/seo/Seo";
-import type { Book } from "../../types";
+import type { Book, SiteSettings } from "../../types";
+
+function t(value: string | undefined, fallback: string) {
+  return value?.trim() || fallback;
+}
 
 export function Books() {
   const constraints = useMemo(() => [where("status", "==", "published")], []);
   const { data: books } = useCollection<Book>("books", constraints);
+  const { data: settings } = useDocument<SiteSettings>("settings", "site");
+
+  const eyebrow = t(settings?.booksEyebrow, "Pubblicazioni");
+  const title = t(settings?.booksTitle, "Libri");
+  const subtitle = t(
+    settings?.booksSubtitle,
+    "Storie che hanno trovato la propria forma sulla pagina.",
+  );
+  const bookLinkLabel = t(settings?.bookLinkLabel, "Scopri il libro →");
 
   return (
     <>
       <Seo title="Libri — Linda Mariotto" description="Libri e pubblicazioni." />
       <section className="mx-auto max-w-6xl px-6 py-20 md:py-28">
         <div className="max-w-2xl">
-          <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Pubblicazioni</p>
-          <h1 className="font-serif text-4xl text-ink md:text-5xl">Libri</h1>
-          <p className="mt-5 leading-relaxed text-muted">
-            Storie che hanno trovato la propria forma sulla pagina.
-          </p>
+          <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">{eyebrow}</p>
+          <h1 className="font-serif text-4xl text-ink md:text-5xl">{title}</h1>
+          <p className="mt-5 leading-relaxed text-muted">{subtitle}</p>
         </div>
 
         <div className="mt-16 space-y-16 md:mt-20 md:space-y-24">
@@ -44,7 +56,9 @@ export function Books() {
                 )}
               </Link>
               <div className={index % 2 === 1 ? "md:order-1" : ""}>
-                <p className="text-xs uppercase tracking-[0.22em] text-accent">Autrice</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">
+                  {t(settings?.authorLabel, "Autrice")}
+                </p>
                 <h2 className="mt-3 font-serif text-3xl text-ink md:text-4xl">
                   <Link to={`/libri/${book.slug}`} className="transition-colors hover:text-accent">
                     {book.title}
@@ -58,7 +72,7 @@ export function Books() {
                   to={`/libri/${book.slug}`}
                   className="mt-6 inline-block text-sm tracking-wide text-accent transition-colors hover:text-ink"
                 >
-                  Scopri il libro →
+                  {bookLinkLabel}
                 </Link>
               </div>
             </article>

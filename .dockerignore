@@ -1,0 +1,10 @@
+.git
+.firebase
+.firebase-emulator-data
+dist
+node_modules
+functions/lib
+functions/node_modules
+*.log
+.env
+.env.*

@@ -30,6 +30,7 @@ functions/.secret.local
 
 # Firebase local cache / hosting deploy cache
 .firebase
+.firebase-emulator-data
 
 # Editor directories and files
 .vscode/*

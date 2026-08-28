@@ -1,10 +1,23 @@
 import { useDocument } from "../../hooks/useDocument";
 import { Seo } from "../../components/seo/Seo";
+import { titleLines } from "../../utils/titleLines";
 import type { SiteSettings } from "../../types";
+
+const DEFAULT_HEADING_TITLE = "Dietro ogni testo\nc’è prima di tutto ascolto.";
+
+function t(value: string | undefined, fallback: string) {
+  return value?.trim() || fallback;
+}
 
 export function About() {
   const { data: settings } = useDocument<SiteSettings>("settings", "site");
   const professionalName = settings?.professionalName ?? "Linda Mariotto";
+  const eyebrow = t(settings?.aboutEyebrow, "Chi sono");
+  const headingLines = titleLines(settings?.aboutHeadingTitle, DEFAULT_HEADING_TITLE);
+  const philosophyChapterLabel = t(settings?.aboutPhilosophyChapterLabel, "Capitolo 01");
+  const philosophyTitle = t(settings?.aboutPhilosophyTitle, "Filosofia di scrittura");
+  const methodChapterLabel = t(settings?.aboutMethodChapterLabel, "Capitolo 02");
+  const methodTitle = t(settings?.aboutMethodTitle, "Metodo di lavoro");
 
   return (
     <>
@@ -28,10 +41,13 @@ export function About() {
           </div>
 
           <div className="md:pt-4">
-            <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Chi sono</p>
+            <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">{eyebrow}</p>
             <h1 className="text-balance font-serif text-4xl leading-[1.12] text-ink md:text-5xl">
-              <span className="block">Dietro ogni testo</span>
-              <span className="block">c’è prima di tutto ascolto.</span>
+              {headingLines.map((line, index) => (
+                <span key={`about-heading-${index}`} className="block">
+                  {line}
+                </span>
+              ))}
             </h1>
             {settings?.bio && (
               <p className="mt-10 text-lg leading-[1.8] text-ink md:text-xl">{settings.bio}</p>
@@ -70,17 +86,21 @@ export function About() {
           <div className="mx-auto max-w-3xl px-6 py-20 md:py-28">
             {settings.philosophy && (
               <article className="border-t border-line pt-12">
-                <p className="text-xs uppercase tracking-[0.22em] text-accent">Capitolo 01</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">
+                  {philosophyChapterLabel}
+                </p>
                 <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">
-                  Filosofia di scrittura
+                  {philosophyTitle}
                 </h2>
                 <p className="mt-8 text-lg leading-[1.85] text-muted">{settings.philosophy}</p>
               </article>
             )}
             {settings.method && (
               <article className="mt-16 border-t border-line pt-12 md:mt-20">
-                <p className="text-xs uppercase tracking-[0.22em] text-accent">Capitolo 02</p>
-                <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">Metodo di lavoro</h2>
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">
+                  {methodChapterLabel}
+                </p>
+                <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">{methodTitle}</h2>
                 <p className="mt-8 text-lg leading-[1.85] text-muted">{settings.method}</p>
               </article>
             )}

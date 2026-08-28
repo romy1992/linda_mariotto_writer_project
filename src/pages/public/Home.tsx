@@ -7,6 +7,7 @@ import { Seo } from "../../components/seo/Seo";
 import { RatingStars } from "../../components/testimonials/RatingStars";
 import { SHOW_PORTFOLIO_PUBLICLY } from "../../constants/features";
 import { formatDate } from "../../utils/formatDate";
+import { titleLines } from "../../utils/titleLines";
 import type {
   Article,
   Book,
@@ -19,14 +20,8 @@ import type {
 const DEFAULT_HERO_TITLE = "Le tue storie.\nLe parole giuste\nper raccontarle.";
 const DEFAULT_MANIFESTO_TITLE = "Scrivo al posto tuo.\nNon al posto della tua voce.";
 const DEFAULT_ABOUT_TITLE = "Una voce al servizio della tua";
-
-function titleLines(value: string | undefined, fallback: string): string[] {
-  const source = value?.trim() ? value : fallback;
-  return source
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-}
+const DEFAULT_CTA_TITLE =
+  "Forse la tua storia esiste già.\nHa solo bisogno delle parole giuste.";
 
 export function Home() {
   const { data: settings } = useDocument<SiteSettings>("settings", "site");
@@ -81,6 +76,51 @@ export function Home() {
   );
   const aboutTitle =
     settings?.homeAboutTitle?.trim() || DEFAULT_ABOUT_TITLE;
+  const ctaTitleLines = titleLines(settings?.homeCtaTitle, DEFAULT_CTA_TITLE);
+
+  const t = (value: string | undefined, fallback: string) => value?.trim() || fallback;
+  const ctaButtonLabel = t(settings?.ctaButtonLabel, "Raccontami il tuo progetto");
+  const bookLinkLabel = t(settings?.bookLinkLabel, "Scopri il libro →");
+  const authorLabel = t(settings?.authorLabel, "Autrice");
+  const aboutEyebrow = t(settings?.aboutEyebrow, "Chi sono");
+  const heroEyebrow = t(settings?.homeHeroEyebrow, "Autrice & Ghostwriter");
+  const heroSecondaryLinkLabel = t(settings?.homeHeroSecondaryLinkLabel, "Scopri come lavoro");
+  const manifestoSubtitle = t(
+    settings?.homeManifestoSubtitle,
+    "Il mio lavoro non è sostituirmi a te, ma ascoltare abbastanza bene da trasformare pensieri, ricordi ed esperienze in parole che continuino a sembrarti tue.",
+  );
+  const aboutLinkLabel = t(settings?.homeAboutLinkLabel, "Continua a leggermi →");
+  const servicesEyebrow = t(settings?.homeServicesEyebrow, "Servizi");
+  const servicesTitle = t(settings?.homeServicesTitle, "Come posso aiutarti");
+  const servicesLinkLabel = t(settings?.homeServicesLinkLabel, "Tutti i servizi →");
+  const serviceItemLinkLabel = t(settings?.homeServiceItemLinkLabel, "Scopri il servizio →");
+  const approachEyebrow = t(settings?.homeApproachEyebrow, "Approccio");
+  const approachTitle = t(settings?.homeApproachTitle, "Come lavoro");
+  const approachPhilosophyLabel = t(settings?.homeApproachPhilosophyLabel, "Filosofia");
+  const approachMethodLabel = t(settings?.homeApproachMethodLabel, "Metodo");
+  const booksTitle = t(
+    settings?.homeBooksTitle,
+    "Anche le mie storie hanno trovato le loro parole.",
+  );
+  const booksOthersLabel = t(settings?.homeBooksOthersLabel, "Altre pubblicazioni");
+  const booksAllLinkLabel = t(settings?.homeBooksAllLinkLabel, "Tutti i libri →");
+  const portfolioEyebrow = t(settings?.homePortfolioEyebrow, "Portfolio");
+  const portfolioTitle = t(settings?.homePortfolioTitle, "Lavori selezionati");
+  const portfolioLinkLabel = t(settings?.homePortfolioLinkLabel, "Tutti i lavori →");
+  const testimonialsEyebrow = t(settings?.homeTestimonialsEyebrow, "Testimonianze");
+  const testimonialsTitle = t(settings?.homeTestimonialsTitle, "Dicono di me");
+  const testimonialsLinkLabel = t(
+    settings?.homeTestimonialsLinkLabel,
+    "Leggi tutte le esperienze →",
+  );
+  const articlesEyebrow = t(settings?.homeArticlesEyebrow, "Magazine");
+  const articlesTitle = t(settings?.homeArticlesTitle, "Articoli recenti");
+  const articlesLinkLabel = t(settings?.homeArticlesLinkLabel, "Tutti gli articoli →");
+  const articleItemLinkLabel = t(settings?.homeArticleItemLinkLabel, "Leggi →");
+  const ctaSubtitle = t(
+    settings?.homeCtaSubtitle,
+    "Raccontami cosa vorresti realizzare. Partiremo da lì.",
+  );
 
   return (
     <>
@@ -97,7 +137,7 @@ export function Home() {
         <div className="mx-auto grid max-w-6xl items-end gap-12 px-6 pb-20 pt-14 md:grid-cols-[1.15fr_0.85fr] md:gap-16 md:pb-28 md:pt-20">
           <div className="reveal">
             <p className="mb-6 text-xs uppercase tracking-[0.22em] text-accent">
-              Autrice &amp; Ghostwriter
+              {heroEyebrow}
             </p>
             <h1 className="max-w-xl text-balance font-serif text-4xl leading-[1.08] text-ink sm:text-5xl md:text-6xl lg:text-7xl">
               {heroTitleLines.map((line, index) => (
@@ -115,13 +155,13 @@ export function Home() {
                 to="/contatti"
                 className="inline-block bg-ink px-6 py-3.5 text-sm tracking-wide text-paper transition-opacity hover:opacity-90"
               >
-                Raccontami il tuo progetto
+                {ctaButtonLabel}
               </Link>
               <a
                 href="#come-lavoro"
                 className="text-sm tracking-wide text-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
               >
-                Scopri come lavoro
+                {heroSecondaryLinkLabel}
               </a>
             </div>
           </div>
@@ -158,8 +198,7 @@ export function Home() {
             ))}
           </h2>
           <p className="mx-auto mt-10 max-w-xl text-base leading-[1.85] text-muted md:text-lg">
-            Il mio lavoro non è sostituirmi a te, ma ascoltare abbastanza bene da trasformare
-            pensieri, ricordi ed esperienze in parole che continuino a sembrarti tue.
+            {manifestoSubtitle}
           </p>
         </div>
       </section>
@@ -169,7 +208,7 @@ export function Home() {
         <section className="border-b border-line">
           <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-[0.35fr_0.65fr] md:gap-16 md:py-28">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-accent">Chi sono</p>
+              <p className="text-xs uppercase tracking-[0.22em] text-accent">{aboutEyebrow}</p>
               <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">
                 {aboutTitle}
               </h2>
@@ -180,7 +219,7 @@ export function Home() {
                 to="/chi-sono"
                 className="mt-8 inline-block text-sm tracking-wide text-accent transition-colors hover:text-ink"
               >
-                Continua a leggermi →
+                {aboutLinkLabel}
               </Link>
             </div>
           </div>
@@ -193,16 +232,16 @@ export function Home() {
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-accent">Servizi</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">{servicesEyebrow}</p>
                 <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">
-                  Come posso aiutarti
+                  {servicesTitle}
                 </h2>
               </div>
               <Link
                 to="/servizi"
                 className="text-sm tracking-wide text-muted transition-colors hover:text-ink"
               >
-                Tutti i servizi →
+                {servicesLinkLabel}
               </Link>
             </div>
 
@@ -225,7 +264,7 @@ export function Home() {
                       </p>
                     </div>
                     <span className="text-sm text-muted transition-colors group-hover:text-ink md:self-center">
-                      Scopri il servizio →
+                      {serviceItemLinkLabel}
                     </span>
                   </Link>
                 </li>
@@ -237,7 +276,7 @@ export function Home() {
                 to="/contatti"
                 className="inline-block bg-ink px-6 py-3.5 text-sm tracking-wide text-paper transition-opacity hover:opacity-90"
               >
-                Raccontami il tuo progetto
+                {ctaButtonLabel}
               </Link>
             </div>
           </div>
@@ -249,21 +288,25 @@ export function Home() {
         <section id="come-lavoro" className="scroll-mt-24 border-b border-line bg-paper-deep/35">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <div className="mb-14 max-w-xl">
-              <p className="text-xs uppercase tracking-[0.22em] text-accent">Approccio</p>
-              <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">Come lavoro</h2>
+              <p className="text-xs uppercase tracking-[0.22em] text-accent">{approachEyebrow}</p>
+              <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">{approachTitle}</h2>
             </div>
             <div className="grid gap-12 md:grid-cols-2 md:gap-16">
               {settings.philosophy && (
                 <div className="border-t border-line pt-8">
                   <p className="text-xs uppercase tracking-[0.22em] text-accent">01</p>
-                  <h3 className="mt-3 font-serif text-2xl text-ink md:text-3xl">Filosofia</h3>
+                  <h3 className="mt-3 font-serif text-2xl text-ink md:text-3xl">
+                    {approachPhilosophyLabel}
+                  </h3>
                   <p className="mt-6 leading-[1.8] text-muted">{settings.philosophy}</p>
                 </div>
               )}
               {settings.method && (
                 <div className="border-t border-line pt-8">
                   <p className="text-xs uppercase tracking-[0.22em] text-accent">02</p>
-                  <h3 className="mt-3 font-serif text-2xl text-ink md:text-3xl">Metodo</h3>
+                  <h3 className="mt-3 font-serif text-2xl text-ink md:text-3xl">
+                    {approachMethodLabel}
+                  </h3>
                   <p className="mt-6 leading-[1.8] text-muted">{settings.method}</p>
                 </div>
               )}
@@ -277,9 +320,9 @@ export function Home() {
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <div className="mb-14 max-w-2xl">
-              <p className="text-xs uppercase tracking-[0.22em] text-accent">Autrice</p>
+              <p className="text-xs uppercase tracking-[0.22em] text-accent">{authorLabel}</p>
               <h2 className="mt-4 text-balance font-serif text-3xl text-ink md:text-4xl">
-                Anche le mie storie hanno trovato le loro parole.
+                {booksTitle}
               </h2>
             </div>
 
@@ -297,7 +340,7 @@ export function Home() {
               )}
 
               <div className="md:pt-6">
-                <p className="text-xs uppercase tracking-[0.22em] text-accent">Autrice</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">{authorLabel}</p>
                 <h3 className="mt-4 font-serif text-3xl text-ink md:text-4xl">
                   {featuredBook.title}
                 </h3>
@@ -313,7 +356,7 @@ export function Home() {
                   to={`/libri/${featuredBook.slug}`}
                   className="mt-8 inline-block text-sm tracking-wide text-accent transition-colors hover:text-ink"
                 >
-                  Scopri il libro →
+                  {bookLinkLabel}
                 </Link>
               </div>
             </div>
@@ -321,12 +364,12 @@ export function Home() {
             {otherBooks.length > 0 && (
               <div className="mt-16 border-t border-line pt-12">
                 <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-                  <p className="text-sm text-muted">Altre pubblicazioni</p>
+                  <p className="text-sm text-muted">{booksOthersLabel}</p>
                   <Link
                     to="/libri"
                     className="text-sm tracking-wide text-muted transition-colors hover:text-ink"
                   >
-                    Tutti i libri →
+                    {booksAllLinkLabel}
                   </Link>
                 </div>
                 <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
@@ -355,7 +398,7 @@ export function Home() {
                   to="/libri"
                   className="text-sm tracking-wide text-muted transition-colors hover:text-ink"
                 >
-                  Tutti i libri →
+                  {booksAllLinkLabel}
                 </Link>
               </div>
             )}
@@ -369,14 +412,14 @@ export function Home() {
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-accent">Portfolio</p>
-                <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">Lavori selezionati</h2>
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">{portfolioEyebrow}</p>
+                <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">{portfolioTitle}</h2>
               </div>
               <Link
                 to="/lavori"
                 className="text-sm tracking-wide text-muted transition-colors hover:text-ink"
               >
-                Tutti i lavori →
+                {portfolioLinkLabel}
               </Link>
             </div>
             <div className="grid gap-8 md:grid-cols-3">
@@ -404,14 +447,18 @@ export function Home() {
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-accent">Testimonianze</p>
-                <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">Dicono di me</h2>
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">
+                  {testimonialsEyebrow}
+                </p>
+                <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">
+                  {testimonialsTitle}
+                </h2>
               </div>
               <Link
                 to="/dicono-di-me"
                 className="text-sm tracking-wide text-muted transition-colors hover:text-ink"
               >
-                Leggi tutte le esperienze →
+                {testimonialsLinkLabel}
               </Link>
             </div>
 
@@ -439,7 +486,7 @@ export function Home() {
                 to="/contatti"
                 className="inline-block border border-ink px-6 py-3.5 text-sm tracking-wide text-ink transition-colors hover:bg-ink hover:text-paper"
               >
-                Raccontami il tuo progetto
+                {ctaButtonLabel}
               </Link>
             </div>
           </div>
@@ -452,14 +499,14 @@ export function Home() {
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-accent">Magazine</p>
-                <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">Articoli recenti</h2>
+                <p className="text-xs uppercase tracking-[0.22em] text-accent">{articlesEyebrow}</p>
+                <h2 className="mt-4 font-serif text-3xl text-ink md:text-4xl">{articlesTitle}</h2>
               </div>
               <Link
                 to="/articoli"
                 className="text-sm tracking-wide text-muted transition-colors hover:text-ink"
               >
-                Tutti gli articoli →
+                {articlesLinkLabel}
               </Link>
             </div>
             <div className="divide-y divide-line border-y border-line">
@@ -478,7 +525,7 @@ export function Home() {
                     </h3>
                     <p className="mt-3 max-w-2xl leading-relaxed text-muted">{article.excerpt}</p>
                   </div>
-                  <span className="text-sm text-muted md:pt-1">Leggi →</span>
+                  <span className="text-sm text-muted md:pt-1">{articleItemLinkLabel}</span>
                 </Link>
               ))}
             </div>
@@ -490,17 +537,18 @@ export function Home() {
       <section>
         <div className="mx-auto max-w-3xl px-6 py-24 text-center md:py-32">
           <h2 className="text-balance font-serif text-3xl leading-[1.15] text-ink md:text-5xl">
-            <span className="block">Forse la tua storia esiste già.</span>
-            <span className="block">Ha solo bisogno delle parole giuste.</span>
+            {ctaTitleLines.map((line, index) => (
+              <span key={`cta-${index}`} className="block">
+                {line}
+              </span>
+            ))}
           </h2>
-          <p className="mx-auto mt-8 max-w-md leading-relaxed text-muted">
-            Raccontami cosa vorresti realizzare. Partiremo da lì.
-          </p>
+          <p className="mx-auto mt-8 max-w-md leading-relaxed text-muted">{ctaSubtitle}</p>
           <Link
             to="/contatti"
             className="mt-10 inline-block bg-ink px-6 py-3.5 text-sm tracking-wide text-paper transition-opacity hover:opacity-90"
           >
-            Raccontami il tuo progetto
+            {ctaButtonLabel}
           </Link>
         </div>
       </section>

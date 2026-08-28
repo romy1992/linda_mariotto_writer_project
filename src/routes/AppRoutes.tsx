@@ -30,6 +30,9 @@ const Dashboard = lazy(() =>
 const Profile = lazy(() =>
   import("../pages/admin/Profile").then((m) => ({ default: m.Profile })),
 );
+const Content = lazy(() =>
+  import("../pages/admin/Content").then((m) => ({ default: m.Content })),
+);
 const Media = lazy(() => import("../pages/admin/Media").then((m) => ({ default: m.Media })));
 const Contacts = lazy(() =>
   import("../pages/admin/Contacts").then((m) => ({ default: m.Contacts })),
@@ -111,6 +114,7 @@ export function AppRoutes() {
         >
           <Route index element={<Dashboard />} />
           <Route path="profilo" element={<Profile />} />
+          <Route path="contenuti" element={<Content />} />
           <Route path="servizi" element={<ServicesList />} />
           <Route path="servizi/:id" element={<ServiceForm />} />
           <Route path="lavori" element={<PortfolioList />} />

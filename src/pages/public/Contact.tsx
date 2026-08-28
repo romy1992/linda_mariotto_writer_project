@@ -38,6 +38,10 @@ const PROJECT_TYPES = [
   "Altro",
 ];
 
+function t(value: string | undefined, fallback: string) {
+  return value?.trim() || fallback;
+}
+
 export function Contact() {
   const [isSent, setIsSent] = useState(false);
   const { data: settings } = useDocument<SiteSettings>("settings", "site");
@@ -47,6 +51,18 @@ export function Contact() {
     formState: { errors, isSubmitting },
     reset,
   } = useForm<ContactFormValues>({ resolver: zodResolver(contactSchema) });
+
+  const eyebrow = t(settings?.contactEyebrow, "Contatti");
+  const title = t(settings?.contactTitle, "Raccontami il tuo progetto.");
+  const subtitle = t(
+    settings?.contactSubtitle,
+    "Non serve avere già tutto chiaro. Raccontami da dove vorresti partire.",
+  );
+  const successMessage = t(
+    settings?.contactSuccessMessage,
+    "Grazie per il tuo messaggio, ti risponderò al più presto.",
+  );
+  const submitLabel = t(settings?.contactSubmitLabel, "Invia messaggio");
 
   async function onSubmit(values: ContactFormValues) {
     const { privacyNoticeAcknowledged, ...contactData } = values;
@@ -65,13 +81,11 @@ export function Contact() {
       <Seo title="Contatti — Linda Mariotto" description="Raccontami il tuo progetto." />
       <section className="mx-auto grid max-w-6xl gap-14 px-6 py-20 md:grid-cols-[0.9fr_1.1fr] md:gap-20 md:py-28">
         <div>
-          <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">Contatti</p>
+          <p className="mb-4 text-xs uppercase tracking-[0.22em] text-accent">{eyebrow}</p>
           <h1 className="text-balance font-serif text-4xl leading-[1.12] text-ink md:text-5xl">
-            Raccontami il tuo progetto.
+            {title}
           </h1>
-          <p className="mt-5 max-w-md leading-relaxed text-muted">
-            Non serve avere già tutto chiaro. Raccontami da dove vorresti partire.
-          </p>
+          <p className="mt-5 max-w-md leading-relaxed text-muted">{subtitle}</p>
           {(settings?.email || settings?.instagramUrl || settings?.linkedinUrl) && (
             <ul className="mt-10 space-y-3 text-sm text-muted">
               {settings.email && (
@@ -111,9 +125,7 @@ export function Contact() {
 
         <div>
           {isSent ? (
-            <p className="border border-line bg-paper-deep/40 p-8 text-ink">
-              Grazie per il tuo messaggio, ti risponderò al più presto.
-            </p>
+            <p className="border border-line bg-paper-deep/40 p-8 text-ink">{successMessage}</p>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -237,7 +249,7 @@ export function Contact() {
                 disabled={isSubmitting}
                 className="bg-ink px-6 py-3 text-sm tracking-wide text-paper transition-opacity hover:opacity-90 disabled:opacity-50"
               >
-                {isSubmitting ? "Invio in corso…" : "Invia messaggio"}
+                {isSubmitting ? "Invio in corso…" : submitLabel}
               </button>
             </form>
           )}

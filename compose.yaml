@@ -1,0 +1,91 @@
+name: linda-writer-local
+
+services:
+  firebase-emulators:
+    image: linda-writer-firebase-emulators:local
+    build:
+      context: .
+      dockerfile: Dockerfile.firebase-emulators
+      args:
+        FIREBASE_TOOLS_VERSION: "15.28.1"
+    environment:
+      FIREBASE_DEMO_PROJECT_ID: demo-linda-writer
+      # Firebase replaces the export target directory. Keep it below the bind
+      # mount root so the export works on Docker Desktop as well as Linux.
+      FIREBASE_EMULATOR_DATA_DIR: /data/export
+    init: true
+    ports:
+      - "127.0.0.1:4000:4000"
+      - "127.0.0.1:4400:4400"
+      - "127.0.0.1:4500:4500"
+      - "127.0.0.1:5001:5001"
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:9099:9099"
+      - "127.0.0.1:9150:9150"
+      - "127.0.0.1:9199:9199"
+    volumes:
+      - .:/workspace
+      - firebase-functions-node-modules:/workspace/functions/node_modules
+      - firebase-emulator-cache:/root/.cache/firebase/emulators
+      - ./.firebase-emulator-data:/data
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:4400/emulators').then(r=>r.json()).then(x=>{for(const n of ['auth','firestore','functions','storage'])if(!x[n])throw new Error(n)})
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 30s
+    stop_grace_period: 30s
+
+  firebase-emulator-seed:
+    image: linda-writer-firebase-emulators:local
+    depends_on:
+      firebase-emulators:
+        condition: service_healthy
+    entrypoint: ["node", "functions/scripts/seed-emulators.cjs"]
+    working_dir: /workspace
+    environment:
+      GCLOUD_PROJECT: demo-linda-writer
+      FIREBASE_AUTH_EMULATOR_HOST: firebase-emulators:9099
+      LOCAL_ADMIN_UID: 2f6bylS8DrWniWMBOVtQMpplL0C2
+      LOCAL_ADMIN_EMAIL: admin@local.test
+      LOCAL_ADMIN_PASSWORD: LocalAdmin2026!
+    volumes:
+      - .:/workspace
+      - firebase-functions-node-modules:/workspace/functions/node_modules
+    restart: "no"
+
+  site:
+    image: linda-writer-site:local
+    build:
+      context: .
+      dockerfile: Dockerfile.site
+    depends_on:
+      firebase-emulator-seed:
+        condition: service_completed_successfully
+    init: true
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "127.0.0.1:5175:5175"
+    volumes:
+      - .:/workspace
+      - site-node-modules:/workspace/node_modules
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:5175').then(r=>{if(!r.ok)throw new Error(String(r.status))})
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 60s
+
+volumes:
+  firebase-functions-node-modules:
+  firebase-emulator-cache:
+  site-node-modules:

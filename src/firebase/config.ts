@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectFirestoreEmulator, initializeFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { connectStorageEmulator, getStorage } from "firebase/storage";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 const firebaseConfig = {
@@ -13,6 +13,17 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+const useFirebaseEmulators = import.meta.env.VITE_USE_FIREBASE_EMULATORS === "true";
+
+if (
+  useFirebaseEmulators &&
+  (!firebaseConfig.projectId || !firebaseConfig.projectId.startsWith("demo-"))
+) {
+  throw new Error(
+    "Firebase emulators require a demo-* project ID; refusing to connect local development to cloud resources.",
+  );
+}
+
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 // Admin forms send optional fields (imageURL, publishedAt, ...) as undefined
@@ -21,10 +32,10 @@ export const db = initializeFirestore(app, { ignoreUndefinedProperties: true });
 export const storage = getStorage(app);
 export const functions = getFunctions(app, "europe-west1");
 
-if (import.meta.env.VITE_USE_FIRESTORE_EMULATOR === "true") {
+if (useFirebaseEmulators) {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
-}
-
-if (import.meta.env.VITE_USE_FUNCTIONS_EMULATOR === "true") {
+  connectStorageEmulator(storage, "127.0.0.1", 9199);
   connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+  console.info(`Firebase Emulator Suite connected (${firebaseConfig.projectId}).`);
 }
