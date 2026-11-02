@@ -28,6 +28,7 @@ type SettingsFormValues = z.infer<typeof settingsSchema>;
 export function Profile() {
   const { data: settings, isLoading } = useDocument<SiteSettings>("settings", "site");
   const [photoURL, setPhotoURL] = useState<string | undefined>(undefined);
+  const [logoURL, setLogoURL] = useState<string | undefined>(undefined);
   const [savedMessage, setSavedMessage] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -42,6 +43,7 @@ export function Profile() {
     if (settings) {
       reset(settings);
       setPhotoURL(settings.photoURL);
+      setLogoURL(settings.logoURL);
     }
   }, [settings, reset]);
 
@@ -49,7 +51,7 @@ export function Profile() {
     setSavedMessage(false);
     setSaveError(null);
     try {
-      await updateSiteSettings({ ...values, photoURL });
+      await updateSiteSettings({ ...values, photoURL, logoURL });
       setSavedMessage(true);
     } catch (error) {
       setSaveError(getSaveErrorMessage(error));
@@ -65,6 +67,26 @@ export function Profile() {
         <div>
           <label className="mb-1 block text-sm text-muted">Foto</label>
           <ImageUploader folder="profile" value={photoURL} onChange={setPhotoURL} />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm text-muted">Logo</label>
+          <p className="mb-2 text-xs leading-relaxed text-muted">
+            Mostrato nell'header e nel footer del sito al posto del monogramma di default. Consigliata
+            un'immagine quadrata. Dopo aver caricato il file, premi "Salva" in fondo alla pagina per
+            pubblicarlo.
+          </p>
+          <div className="mb-3 flex items-center gap-3">
+            <img
+              src={logoURL || "/logo.svg"}
+              alt="Anteprima logo attuale"
+              className="h-16 w-16 border border-line object-contain p-1"
+            />
+            <span className="text-xs text-muted">
+              {logoURL ? "Logo personalizzato" : "Logo di default, nessuno personalizzato caricato"}
+            </span>
+          </div>
+          <ImageUploader folder="branding" value={logoURL} onChange={setLogoURL} />
         </div>
 
         <Field label="Nome e cognome" error={errors.professionalName?.message}>

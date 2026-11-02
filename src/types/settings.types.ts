@@ -11,6 +11,8 @@ export interface SiteSettings {
   /** Home “Chi sono” section title. */
   homeAboutTitle?: string;
   photoURL?: string;
+  /** Custom site logo. Falls back to the default /logo.svg mark when unset. */
+  logoURL?: string;
   email: string;
   phone?: string;
   instagramUrl?: string;

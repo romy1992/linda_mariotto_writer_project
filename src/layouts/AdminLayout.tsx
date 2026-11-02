@@ -2,6 +2,8 @@ import { Suspense, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase/config";
+import { useDocument } from "../hooks/useDocument";
+import type { SiteSettings } from "../types";
 
 function SectionFallback() {
   return <div className="p-6 text-muted">Caricamento…</div>;
@@ -29,12 +31,14 @@ function navClass({ isActive }: { isActive: boolean }) {
 
 export function AdminLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: settings } = useDocument<SiteSettings>("settings", "site");
+  const logoSrc = settings?.logoURL || "/logo.svg";
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       <header className="flex items-center justify-between border-b border-line p-4 md:hidden">
         <span className="flex items-center gap-2">
-          <img src="/logo.svg" alt="" className="h-6 w-6" />
+          <img src={logoSrc} alt="" className="h-6 w-6 object-contain" />
           <p className="font-serif text-base text-ink">Admin</p>
         </span>
         <button
@@ -57,7 +61,7 @@ export function AdminLayout() {
         className={`${isMenuOpen ? "block" : "hidden"} w-full shrink-0 border-b border-line p-4 md:block md:w-56 md:border-b-0 md:border-r`}
       >
         <span className="mb-6 hidden items-center gap-2 px-3 md:flex">
-          <img src="/logo.svg" alt="" className="h-6 w-6" />
+          <img src={logoSrc} alt="" className="h-6 w-6 object-contain" />
           <p className="font-serif text-base text-ink">Admin</p>
         </span>
         <nav className="flex flex-col gap-1">

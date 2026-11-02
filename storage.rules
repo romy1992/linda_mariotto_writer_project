@@ -11,7 +11,7 @@ service firebase.storage {
 
     // Public media: profile photo, service/portfolio/book/article images.
     match /{folder}/{allPaths=**} {
-      allow read: if folder in ['profile', 'services', 'portfolio', 'books', 'articles'];
+      allow read: if folder in ['profile', 'branding', 'services', 'portfolio', 'books', 'articles'];
       allow write: if isAdmin();
     }
 

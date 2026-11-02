@@ -34,6 +34,7 @@ export function PublicLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: settings } = useDocument<SiteSettings>("settings", "site");
   const brandName = settings?.professionalName?.trim() || "Linda Mariotto";
+  const logoSrc = settings?.logoURL || "/logo.svg";
   const year = new Date().getFullYear();
 
   return (
@@ -45,7 +46,7 @@ export function PublicLayout() {
             className="group flex min-w-0 items-center gap-3"
             onClick={() => setIsMenuOpen(false)}
           >
-            <img src="/logo.svg" alt="" className="h-9 w-9 shrink-0" />
+            <img src={logoSrc} alt="" className="h-9 w-9 shrink-0 object-contain" />
             <span className="min-w-0">
               <span className="block font-serif text-lg tracking-tight text-ink md:text-xl">
                 {brandName}
@@ -120,7 +121,7 @@ export function PublicLayout() {
         <div className="mx-auto grid max-w-6xl gap-12 px-6 py-14 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-3">
-              <img src="/logo.svg" alt="" className="h-8 w-8 shrink-0" />
+              <img src={logoSrc} alt="" className="h-8 w-8 shrink-0 object-contain" />
               <p className="font-serif text-2xl uppercase tracking-wide text-ink">{brandName}</p>
             </div>
             <p className="mt-2 text-xs uppercase tracking-[0.18em] text-muted">
